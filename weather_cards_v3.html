@@ -1,0 +1,1510 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Weather Cards</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin-bottom: 30px;
+        }
+
+        .weather-card {
+            width: 250px;
+            height: 350px;
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-title {
+            text-align: center;
+            padding: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Wind Card */
+        .wind-card {
+            background: linear-gradient(to bottom, #2c3e50, #34495e);
+        }
+
+        .cloud {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .cloud-1 {
+            width: 100px;
+            height: 40px;
+            top: 100px;
+            left: -100px;
+            animation: moveCloud 15s linear infinite;
+        }
+
+        .cloud-2 {
+            width: 70px;
+            height: 30px;
+            top: 150px;
+            left: -70px;
+            animation: moveCloud 12s linear infinite;
+            animation-delay: 2s;
+        }
+
+        .cloud-3 {
+            width: 120px;
+            height: 45px;
+            top: 200px;
+            left: -120px;
+            animation: moveCloud 18s linear infinite;
+            animation-delay: 5s;
+        }
+
+        .wind-line {
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.5);
+            position: absolute;
+            z-index: 1;
+            animation: windLine 3s linear infinite;
+        }
+
+        .wind-line-1 {
+            width: 50px;
+            top: 120px;
+            left: -50px;
+        }
+
+        .wind-line-2 {
+            width: 70px;
+            top: 170px;
+            left: -70px;
+            animation-delay: 0.5s;
+        }
+
+        .wind-line-3 {
+            width: 40px;
+            top: 220px;
+            left: -40px;
+            animation-delay: 1s;
+        }
+
+        .tree {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .trunk {
+            width: 10px;
+            height: 60px;
+            background-color: #5d4037;
+            margin: 0 auto;
+        }
+
+        .leaves {
+            width: 60px;
+            height: 80px;
+            background-color: #2e7d32;
+            border-radius: 50% 50% 5% 5%;
+            margin: 0 auto;
+            transform-origin: bottom center;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        /* Rain Card */
+        .rain-card {
+            background: linear-gradient(to bottom, #37474f, #546e7a);
+        }
+
+        .rain-cloud {
+            width: 120px;
+            height: 50px;
+            background-color: #78909c;
+            border-radius: 50px;
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .raindrop {
+            position: absolute;
+            background-color: rgba(120, 190, 255, 0.7);
+            width: 3px;
+            height: 15px;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            animation: rain 1.5s linear infinite;
+            z-index: 1;
+        }
+
+        .puddle {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 20px;
+            background-color: rgba(120, 190, 255, 0.3);
+            border-radius: 50%;
+            z-index: 1;
+            animation: puddle 3s ease-in-out infinite;
+        }
+
+        /* Sun Card */
+        .sun-card {
+            background: linear-gradient(to bottom, #ff9800, #ff5722);
+            overflow: hidden;
+        }
+
+        .sun {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 50px #ffeb3b, 0 0 100px #ffeb3b;
+            animation: pulse 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .sun-ray {
+            position: absolute;
+            background-color: rgba(255, 235, 59, 0.7);
+            z-index: 0;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background-color: #e57373;
+            z-index: 1;
+        }
+
+        .heat-wave {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: heatWave 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        /* Snow Card */
+        .snow-card {
+            background: linear-gradient(to bottom, #90a4ae, #cfd8dc);
+        }
+
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            animation: snowfall linear infinite;
+            z-index: 1;
+        }
+
+        .snow-ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background-color: white;
+            border-radius: 50% 50% 0 0 / 10%;
+            z-index: 1;
+        }
+
+        .snow-pile {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .snow-pile-1 {
+            width: 80px;
+            height: 30px;
+            bottom: 50px;
+            left: 30px;
+        }
+
+        .snow-pile-2 {
+            width: 100px;
+            height: 40px;
+            bottom: 40px;
+            right: 20px;
+        }
+
+        /* Thunderstorm Card */
+        .thunderstorm-card {
+            background: linear-gradient(to bottom, #263238, #37474f);
+        }
+
+        .thunder-cloud {
+            position: absolute;
+            background-color: #455a64;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .thunder-cloud-1 {
+            width: 150px;
+            height: 60px;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .thunder-cloud-2 {
+            width: 100px;
+            height: 40px;
+            top: 100px;
+            left: 40%;
+            transform: translateX(-50%);
+        }
+
+        .lightning {
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 100px;
+            background-color: #ffeb3b;
+            clip-path: polygon(50% 0%, 0% 40%, 40% 40%, 10% 100%, 90% 40%, 60% 40%, 50% 0%);
+            animation: lightning 4s ease-in-out infinite;
+            z-index: 2;
+            opacity: 0;
+            filter: blur(1px);
+            box-shadow: 0 0 10px 2px rgba(255, 235, 59, 0.8);
+        }
+
+        .thunder-raindrop {
+            position: absolute;
+            background-color: rgba(120, 190, 255, 0.7);
+            width: 3px;
+            height: 15px;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            animation: rain 1.5s linear infinite;
+            z-index: 1;
+        }
+
+        /* Tornado Card */
+        .tornado-card {
+            background: linear-gradient(to bottom, #455a64, #607d8b);
+        }
+
+        .tornado-funnel {
+            position: absolute;
+            background-color: rgba(120, 144, 156, 0.8);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: rotateTornado 3s linear infinite;
+        }
+
+        .tornado-section-1 {
+            width: 100px;
+            height: 30px;
+            top: 110px;
+        }
+
+        .tornado-section-2 {
+            width: 80px;
+            height: 30px;
+            top: 140px;
+        }
+
+        .tornado-section-3 {
+            width: 60px;
+            height: 30px;
+            top: 170px;
+        }
+
+        .tornado-section-4 {
+            width: 40px;
+            height: 30px;
+            top: 200px;
+        }
+
+        .tornado-section-5 {
+            width: 20px;
+            height: 30px;
+            top: 230px;
+        }
+
+        .debris {
+            position: absolute;
+            background-color: #8d6e63;
+            border-radius: 2px;
+            z-index: 1;
+            animation: debrisFloat 4s linear infinite;
+        }
+
+        /* Foggy Card */
+        .foggy-card {
+            background: linear-gradient(to bottom, #78909c, #b0bec5);
+        }
+
+        .fog-layer {
+            position: absolute;
+            width: 300px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fogMove 8s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .fog-layer-1 {
+            top: 100px;
+        }
+
+        .fog-layer-2 {
+            top: 130px;
+            animation-delay: 1s;
+            opacity: 0.6;
+        }
+
+        .fog-layer-3 {
+            top: 160px;
+            animation-delay: 2s;
+            opacity: 0.5;
+        }
+
+        .fog-layer-4 {
+            top: 190px;
+            animation-delay: 3s;
+            opacity: 0.7;
+        }
+
+        .fog-layer-5 {
+            top: 220px;
+            animation-delay: 4s;
+            opacity: 0.4;
+        }
+
+        .tree-silhouette {
+            position: absolute;
+            bottom: 50px;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .tree-silhouette-1 {
+            left: 50px;
+        }
+
+        .tree-silhouette-2 {
+            right: 50px;
+        }
+
+        /* Cloudy Card */
+        .cloudy-card {
+            background: linear-gradient(to bottom, #607d8b, #90a4ae);
+        }
+
+        .big-cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50px;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .big-cloud-1 {
+            width: 150px;
+            height: 60px;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: cloudFloat 6s ease-in-out infinite;
+        }
+
+        .big-cloud-2 {
+            width: 100px;
+            height: 40px;
+            top: 150px;
+            left: 30%;
+            transform: translateX(-50%);
+            animation: cloudFloat 8s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        .big-cloud-3 {
+            width: 120px;
+            height: 50px;
+            top: 200px;
+            left: 70%;
+            transform: translateX(-50%);
+            animation: cloudFloat 7s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+
+        .sun-peek {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            top: 70px;
+            right: 30px;
+            box-shadow: 0 0 20px #ffeb3b;
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        /* Wildfire Card */
+        .wildfire-card {
+            background: linear-gradient(to bottom, #bf360c, #ff5722);
+            overflow: hidden;
+        }
+
+        .fire-ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #3e2723;
+            z-index: 1;
+        }
+
+        .fire-particle {
+            position: absolute;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            z-index: 2;
+            animation: fireRise linear infinite;
+            filter: blur(1px);
+        }
+
+        .tree-burning {
+            position: absolute;
+            bottom: 100px;
+            z-index: 2;
+        }
+
+        .tree-burning-1 {
+            left: 60px;
+        }
+
+        .tree-burning-2 {
+            right: 60px;
+        }
+
+        .tree-trunk-burning {
+            width: 10px;
+            height: 60px;
+            background-color: #5d4037;
+            margin: 0 auto;
+        }
+
+        .tree-fire {
+            width: 40px;
+            height: 60px;
+            margin: 0 auto;
+            background: linear-gradient(to top, #ff9800, #f44336, #ffeb3b);
+            border-radius: 50% 50% 20% 20%;
+            animation: flicker 0.5s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px #ff9800;
+        }
+
+        .smoke {
+            position: absolute;
+            background-color: rgba(120, 120, 120, 0.7);
+            border-radius: 50%;
+            animation: smokeRise 4s ease-out infinite;
+            z-index: 3;
+        }
+
+        /* Flood Card */
+        .flood-card {
+            background: linear-gradient(to bottom, #1565c0, #0d47a1);
+            overflow: hidden;
+        }
+
+        .flood-water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, rgba(33, 150, 243, 0.7), #1565c0);
+            z-index: 1;
+            animation: waterRise 10s ease-in-out infinite alternate;
+        }
+
+        .flood-wave {
+            position: absolute;
+            height: 20px;
+            width: 300px;
+            background-color: rgba(33, 150, 243, 0.5);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: floodWave 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .house {
+            position: absolute;
+            bottom: 180px;
+            z-index: 2;
+            animation: floatObject 3s ease-in-out infinite;
+        }
+
+        .house-1 {
+            left: 50px;
+        }
+
+        .house-2 {
+            right: 50px;
+            animation-delay: 1.5s;
+        }
+
+        .house-base {
+            width: 40px;
+            height: 30px;
+            background-color: #e57373;
+        }
+
+        .house-roof {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 20px solid #c62828;
+            margin-left: -5px;
+        }
+
+        .rain-particle {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background-color: rgba(33, 150, 243, 0.7);
+            animation: heavyRain 1s linear infinite;
+            z-index: 3;
+        }
+
+        /* Tsunami Card */
+        .tsunami-card {
+            background: linear-gradient(to bottom, #01579b, #0277bd);
+            overflow: hidden;
+        }
+
+        .ocean {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background-color: #01579b;
+            z-index: 1;
+        }
+
+        .tsunami-wave {
+            position: absolute;
+            width: 300px;
+            height: 150px;
+            background-color: #0288d1;
+            border-radius: 50% 50% 0 0;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 100px;
+            z-index: 2;
+            animation: tsunamiWave 8s ease-in-out infinite;
+            overflow: hidden;
+        }
+
+        .wave-highlight {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background-color: rgba(79, 195, 247, 0.5);
+            top: 30px;
+            border-radius: 50%;
+            animation: waveHighlight 8s ease-in-out infinite;
+        }
+
+        .wave-foam {
+            position: absolute;
+            width: 300px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            top: -15px;
+            left: 0;
+            z-index: 3;
+            animation: waveFoam 8s ease-in-out infinite;
+        }
+
+        .boat {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background-color: #795548;
+            border-radius: 5px 5px 0 0;
+            z-index: 3;
+            animation: boatRock 3s ease-in-out infinite;
+        }
+
+        .boat-1 {
+            bottom: 200px;
+            left: 50px;
+        }
+
+        .boat-2 {
+            bottom: 220px;
+            right: 50px;
+            animation-delay: 1.5s;
+        }
+
+        /* Hurricane Card */
+        .hurricane-card {
+            background: linear-gradient(to bottom, #263238, #37474f);
+            overflow: hidden;
+        }
+
+        .hurricane-eye {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #b0bec5;
+            border-radius: 50%;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) inset;
+        }
+
+        .hurricane-band {
+            position: absolute;
+            border-radius: 50%;
+            border: 15px solid rgba(120, 144, 156, 0.7);
+            left: 50%;
+            top: 150px;
+            transform: translate(-50%, -50%);
+            animation: hurricaneRotate 5s linear infinite;
+            z-index: 2;
+        }
+
+        .hurricane-band-1 {
+            width: 100px;
+            height: 100px;
+        }
+
+        .hurricane-band-2 {
+            width: 150px;
+            height: 150px;
+            border-width: 12px;
+            animation-duration: 7s;
+        }
+
+        .hurricane-band-3 {
+            width: 200px;
+            height: 200px;
+            border-width: 10px;
+            animation-duration: 9s;
+        }
+
+        .hurricane-band-4 {
+            width: 250px;
+            height: 250px;
+            border-width: 8px;
+            animation-duration: 11s;
+        }
+
+        .hurricane-cloud {
+            position: absolute;
+            background-color: #455a64;
+            border-radius: 50%;
+            z-index: 1;
+            animation: hurricaneCloudMove 10s linear infinite;
+        }
+
+        .rain-streak {
+            position: absolute;
+            width: 1px;
+            height: 15px;
+            background-color: rgba(176, 190, 197, 0.7);
+            transform: rotate(45deg);
+            animation: hurricaneRain 1s linear infinite;
+            z-index: 1;
+        }
+
+        /* Animations */
+        @keyframes moveCloud {
+            0% {
+                left: -100px;
+            }
+            100% {
+                left: 300px;
+            }
+        }
+
+        @keyframes windLine {
+            0% {
+                left: -100px;
+            }
+            100% {
+                left: 300px;
+            }
+        }
+
+        @keyframes sway {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+        }
+
+        @keyframes rain {
+            0% {
+                top: 130px;
+                opacity: 1;
+            }
+            80% {
+                opacity: 0.5;
+            }
+            100% {
+                top: 250px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes puddle {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 50px #ffeb3b, 0 0 100px #ffeb3b;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+                box-shadow: 0 0 70px #ffeb3b, 0 0 120px #ffeb3b;
+            }
+        }
+
+        @keyframes heatWave {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes snowfall {
+            0% {
+                top: -10px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 280px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes lightning {
+            0%, 15%, 20%, 22.5%, 25%, 27.5%, 30%, 100% {
+                opacity: 0;
+                filter: blur(1px);
+            }
+            17.5%, 21.25%, 23.75%, 26.25%, 28.75% {
+                opacity: 1;
+                filter: blur(0);
+                box-shadow: 0 0 20px 5px rgba(255, 235, 59, 0.9);
+            }
+        }
+
+        @keyframes rotateTornado {
+            0% {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            100% {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+
+        @keyframes debrisFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) rotate(var(--r));
+                opacity: 0;
+            }
+        }
+
+        @keyframes fogMove {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: var(--base-opacity);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+                opacity: calc(var(--base-opacity) * 0.7);
+            }
+        }
+
+        @keyframes cloudFloat {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @keyframes fireRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 20px #ff9800;
+            }
+            50% {
+                opacity: 0.8;
+                box-shadow: 0 0 10px #ff9800;
+            }
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-200px) scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes waterRise {
+            0%, 100% {
+                height: 200px;
+            }
+            50% {
+                height: 220px;
+            }
+        }
+
+        @keyframes floodWave {
+            0%, 100% {
+                transform: translateX(-50%) scaleX(1);
+            }
+            50% {
+                transform: translateX(-50%) scaleX(1.1);
+            }
+        }
+
+        @keyframes floatObject {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-5px) rotate(-2deg);
+            }
+            75% {
+                transform: translateY(-5px) rotate(2deg);
+            }
+        }
+
+        @keyframes heavyRain {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(350px);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes tsunamiWave {
+            0%, 100% {
+                height: 150px;
+                bottom: 100px;
+            }
+            50% {
+                height: 180px;
+                bottom: 120px;
+            }
+        }
+
+        @keyframes waveHighlight {
+            0%, 100% {
+                opacity: 0.5;
+                top: 30px;
+            }
+            50% {
+                opacity: 0.7;
+                top: 40px;
+            }
+        }
+
+        @keyframes waveFoam {
+            0%, 100% {
+                opacity: 0.7;
+                top: -15px;
+            }
+            50% {
+                opacity: 0.9;
+                top: -5px;
+            }
+        }
+
+        @keyframes boatRock {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(10deg);
+            }
+            75% {
+                transform: rotate(-10deg);
+            }
+        }
+
+        @keyframes hurricaneRotate {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes hurricaneCloudMove {
+            0% {
+                transform: rotate(0deg) translateX(120px);
+            }
+            100% {
+                transform: rotate(360deg) translateX(120px);
+            }
+        }
+
+        @keyframes hurricaneRain {
+            0% {
+                transform: translateY(-10px) rotate(45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(20px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Animated Weather Cards</h1>
+    
+    <div class="container">
+        <!-- Wind Card -->
+        <div class="weather-card wind-card">
+            <div class="card-title">Wind</div>
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+            <div class="wind-line wind-line-1"></div>
+            <div class="wind-line wind-line-2"></div>
+            <div class="wind-line wind-line-3"></div>
+            <div class="tree">
+                <div class="leaves"></div>
+                <div class="trunk"></div>
+            </div>
+        </div>
+
+        <!-- Rain Card -->
+        <div class="weather-card rain-card">
+            <div class="card-title">Rain</div>
+            <div class="rain-cloud"></div>
+            <div id="raindrops-container"><div class="raindrop" style="left: 232.337px; animation-delay: 0.246185s;"></div><div class="raindrop" style="left: 141.928px; animation-delay: 0.880988s;"></div><div class="raindrop" style="left: 47.2062px; animation-delay: 1.071s;"></div><div class="raindrop" style="left: 177.698px; animation-delay: 0.654815s;"></div><div class="raindrop" style="left: 222.446px; animation-delay: 0.932144s;"></div><div class="raindrop" style="left: 110.546px; animation-delay: 0.851172s;"></div><div class="raindrop" style="left: 192.447px; animation-delay: 0.924659s;"></div><div class="raindrop" style="left: 61.0947px; animation-delay: 0.201777s;"></div><div class="raindrop" style="left: 185.959px; animation-delay: 0.747939s;"></div><div class="raindrop" style="left: 30.903px; animation-delay: 1.44658s;"></div><div class="raindrop" style="left: 64.4061px; animation-delay: 0.286694s;"></div><div class="raindrop" style="left: 131.15px; animation-delay: 0.328834s;"></div><div class="raindrop" style="left: 45.6037px; animation-delay: 0.888709s;"></div><div class="raindrop" style="left: 112.104px; animation-delay: 0.517069s;"></div><div class="raindrop" style="left: 116.163px; animation-delay: 0.332001s;"></div><div class="raindrop" style="left: 128.384px; animation-delay: 0.335824s;"></div><div class="raindrop" style="left: 158.954px; animation-delay: 0.611108s;"></div><div class="raindrop" style="left: 222.86px; animation-delay: 1.37492s;"></div><div class="raindrop" style="left: 208.977px; animation-delay: 0.292242s;"></div><div class="raindrop" style="left: 35.2903px; animation-delay: 1.14105s;"></div></div>
+            <div class="puddle"></div>
+        </div>
+
+        <!-- Sun Card -->
+        <div class="weather-card sun-card">
+            <div class="card-title">Sun</div>
+            <div class="sun"></div>
+            <div id="sun-rays-container"><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(0rad) translateY(-50px); animation: 3s ease-in-out 0s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(0.523599rad) translateY(-50px); animation: 3s ease-in-out 0.1s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(1.0472rad) translateY(-50px); animation: 3s ease-in-out 0.2s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(1.5708rad) translateY(-50px); animation: 3s ease-in-out 0.3s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(2.0944rad) translateY(-50px); animation: 3s ease-in-out 0.4s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(2.61799rad) translateY(-50px); animation: 3s ease-in-out 0.5s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(3.14159rad) translateY(-50px); animation: 3s ease-in-out 0.6s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(3.66519rad) translateY(-50px); animation: 3s ease-in-out 0.7s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(4.18879rad) translateY(-50px); animation: 3s ease-in-out 0.8s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(4.71239rad) translateY(-50px); animation: 3s ease-in-out 0.9s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(5.23599rad) translateY(-50px); animation: 3s ease-in-out 1s infinite normal none running pulse;"></div><div class="sun-ray" style="width: 3px; height: 100px; transform-origin: center bottom; transform: translate(125px, 100px) rotate(5.75959rad) translateY(-50px); animation: 3s ease-in-out 1.1s infinite normal none running pulse;"></div></div>
+            <div class="ground"></div>
+            <div class="heat-wave" style="bottom: 90px;"></div>
+            <div class="heat-wave" style="bottom: 110px; animation-delay: 0.5s;"></div>
+            <div class="heat-wave" style="bottom: 130px; animation-delay: 1s;"></div>
+        </div>
+
+        <!-- Snow Card -->
+        <div class="weather-card snow-card">
+            <div class="card-title">Snow</div>
+            <div id="snowflakes-container"><div class="snowflake" style="left: 178.651px; font-size: 19.8762px; animation-duration: 7.48182s; animation-delay: 0.233271s;">❉</div><div class="snowflake" style="left: 42.7033px; font-size: 18.2609px; animation-duration: 9.73924s; animation-delay: 2.8592s;">❅</div><div class="snowflake" style="left: 10.8724px; font-size: 15.3669px; animation-duration: 7.04632s; animation-delay: 3.05645s;">✻</div><div class="snowflake" style="left: 189.707px; font-size: 19.1744px; animation-duration: 5.3047s; animation-delay: 2.69848s;">❆</div><div class="snowflake" style="left: 101.347px; font-size: 15.6125px; animation-duration: 8.54844s; animation-delay: 1.3384s;">❆</div><div class="snowflake" style="left: 25.4933px; font-size: 19.0036px; animation-duration: 5.51071s; animation-delay: 2.27952s;">❄</div><div class="snowflake" style="left: 240.493px; font-size: 12.1889px; animation-duration: 7.62409s; animation-delay: 0.538279s;">✻</div><div class="snowflake" style="left: 195.58px; font-size: 15.646px; animation-duration: 5.07082s; animation-delay: 0.325581s;">❄</div><div class="snowflake" style="left: 219.621px; font-size: 15.851px; animation-duration: 5.12477s; animation-delay: 4.41367s;">❅</div><div class="snowflake" style="left: 47.6506px; font-size: 17.2581px; animation-duration: 9.83535s; animation-delay: 0.200448s;">✻</div><div class="snowflake" style="left: 203.086px; font-size: 16.9244px; animation-duration: 5.99159s; animation-delay: 4.24441s;">✻</div><div class="snowflake" style="left: 160.503px; font-size: 12.4872px; animation-duration: 7.04303s; animation-delay: 4.26109s;">❅</div><div class="snowflake" style="left: 210.168px; font-size: 14.2136px; animation-duration: 9.73971s; animation-delay: 4.59798s;">❅</div><div class="snowflake" style="left: 231.211px; font-size: 11.2376px; animation-duration: 5.24424s; animation-delay: 0.0185615s;">❅</div><div class="snowflake" style="left: 113.405px; font-size: 15.328px; animation-duration: 7.7255s; animation-delay: 2.69538s;">❄</div><div class="snowflake" style="left: 206.798px; font-size: 17.5655px; animation-duration: 6.56396s; animation-delay: 0.0164429s;">❅</div><div class="snowflake" style="left: 17.8566px; font-size: 10.6871px; animation-duration: 7.8383s; animation-delay: 0.961985s;">❄</div><div class="snowflake" style="left: 82.5122px; font-size: 13.6428px; animation-duration: 7.56935s; animation-delay: 2.99931s;">❅</div><div class="snowflake" style="left: 232.084px; font-size: 10.8624px; animation-duration: 8.59146s; animation-delay: 1.33406s;">✼</div><div class="snowflake" style="left: 1.25535px; font-size: 12.9288px; animation-duration: 5.63252s; animation-delay: 0.719312s;">❄</div><div class="snowflake" style="left: 50.3384px; font-size: 18.3627px; animation-duration: 8.61792s; animation-delay: 2.25375s;">✻</div><div class="snowflake" style="left: 81.7562px; font-size: 14.8085px; animation-duration: 9.88794s; animation-delay: 1.51425s;">✼</div><div class="snowflake" style="left: 175.562px; font-size: 16.5146px; animation-duration: 5.63473s; animation-delay: 3.24895s;">✼</div><div class="snowflake" style="left: 153.07px; font-size: 19.088px; animation-duration: 5.97689s; animation-delay: 2.67936s;">✼</div><div class="snowflake" style="left: 98.7361px; font-size: 17.9362px; animation-duration: 7.44844s; animation-delay: 0.681036s;">❅</div><div class="snowflake" style="left: 130.302px; font-size: 14.4067px; animation-duration: 9.13336s; animation-delay: 0.851464s;">❆</div><div class="snowflake" style="left: 34.7306px; font-size: 15.3118px; animation-duration: 6.66894s; animation-delay: 2.66422s;">❉</div><div class="snowflake" style="left: 156.472px; font-size: 16.6691px; animation-duration: 5.70568s; animation-delay: 1.99636s;">❅</div><div class="snowflake" style="left: 29.1102px; font-size: 11.6792px; animation-duration: 7.17196s; animation-delay: 4.54448s;">❉</div><div class="snowflake" style="left: 108.915px; font-size: 13.8588px; animation-duration: 9.21195s; animation-delay: 3.20682s;">✼</div></div>
+            <div class="snow-ground"></div>
+            <div class="snow-pile snow-pile-1"></div>
+            <div class="snow-pile snow-pile-2"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Thunderstorm Card -->
+        <div class="weather-card thunderstorm-card">
+            <div class="card-title">Thunderstorm</div>
+            <div class="thunder-cloud thunder-cloud-1"></div>
+            <div class="thunder-cloud thunder-cloud-2"></div>
+            <div class="lightning"></div>
+            <div id="thunder-raindrops-container"><div class="thunder-raindrop" style="left: 180.26px; animation-delay: 0.938721s;"></div><div class="thunder-raindrop" style="left: 107.284px; animation-delay: 0.209994s;"></div><div class="thunder-raindrop" style="left: 217.825px; animation-delay: 0.774494s;"></div><div class="thunder-raindrop" style="left: 210.703px; animation-delay: 0.88242s;"></div><div class="thunder-raindrop" style="left: 84.3461px; animation-delay: 0.940485s;"></div><div class="thunder-raindrop" style="left: 141.138px; animation-delay: 0.495873s;"></div><div class="thunder-raindrop" style="left: 19.4523px; animation-delay: 0.448603s;"></div><div class="thunder-raindrop" style="left: 72.2753px; animation-delay: 0.578806s;"></div><div class="thunder-raindrop" style="left: 196.901px; animation-delay: 1.47787s;"></div><div class="thunder-raindrop" style="left: 208.568px; animation-delay: 0.568289s;"></div><div class="thunder-raindrop" style="left: 193.246px; animation-delay: 0.459936s;"></div><div class="thunder-raindrop" style="left: 72.6819px; animation-delay: 0.981231s;"></div><div class="thunder-raindrop" style="left: 106.038px; animation-delay: 1.2275s;"></div><div class="thunder-raindrop" style="left: 230.717px; animation-delay: 1.42477s;"></div><div class="thunder-raindrop" style="left: 125.826px; animation-delay: 0.5402s;"></div><div class="thunder-raindrop" style="left: 35.5177px; animation-delay: 1.39439s;"></div><div class="thunder-raindrop" style="left: 195.276px; animation-delay: 1.176s;"></div><div class="thunder-raindrop" style="left: 118.806px; animation-delay: 0.805043s;"></div><div class="thunder-raindrop" style="left: 211.581px; animation-delay: 0.875045s;"></div><div class="thunder-raindrop" style="left: 43.4534px; animation-delay: 0.0896306s;"></div><div class="thunder-raindrop" style="left: 85.4121px; animation-delay: 0.37282s;"></div><div class="thunder-raindrop" style="left: 166.259px; animation-delay: 0.426944s;"></div><div class="thunder-raindrop" style="left: 79.3534px; animation-delay: 1.43824s;"></div><div class="thunder-raindrop" style="left: 230.752px; animation-delay: 0.118564s;"></div><div class="thunder-raindrop" style="left: 22.6997px; animation-delay: 0.419761s;"></div><div class="thunder-raindrop" style="left: 71.2764px; animation-delay: 1.03858s;"></div><div class="thunder-raindrop" style="left: 33.0595px; animation-delay: 0.778881s;"></div><div class="thunder-raindrop" style="left: 163.189px; animation-delay: 0.761154s;"></div><div class="thunder-raindrop" style="left: 141.773px; animation-delay: 0.221976s;"></div><div class="thunder-raindrop" style="left: 155.707px; animation-delay: 0.87853s;"></div></div>
+        </div>
+
+        <!-- Tornado Card -->
+        <div class="weather-card tornado-card">
+            <div class="card-title">Tornado</div>
+            <div class="tornado-funnel tornado-section-1"></div>
+            <div class="tornado-funnel tornado-section-2"></div>
+            <div class="tornado-funnel tornado-section-3"></div>
+            <div class="tornado-funnel tornado-section-4"></div>
+            <div class="tornado-funnel tornado-section-5"></div>
+            <div id="debris-container"><div class="debris" style="width: 3.6905px; height: 3.6905px; left: 210.379px; top: 346.86px; --tx: -82.98420801305627px; --ty: 24.860923176780435px; --r: 256.94999677012015deg; animation-delay: 1.55779s;"></div><div class="debris" style="width: 3.92104px; height: 3.92104px; left: 56.4224px; top: 163.712px; --tx: 31.476917818551932px; --ty: -28.443282030646543px; --r: -16.71759542941703deg; animation-delay: 2.03892s;"></div><div class="debris" style="width: 5.8925px; height: 5.8925px; left: 203.531px; top: 243.22px; --tx: 48.70748978845478px; --ty: 36.08984040601526px; --r: -295.74753656928317deg; animation-delay: 4.14363s;"></div><div class="debris" style="width: 4.19979px; height: 4.19979px; left: 97.5096px; top: 307.714px; --tx: 15.315254147823776px; --ty: 47.66728621370717px; --r: -114.7156123801361deg; animation-delay: 1.20888s;"></div><div class="debris" style="width: 2.55929px; height: 2.55929px; left: 38.5362px; top: 309.216px; --tx: 92.44521727513839px; --ty: 45.624204053022765px; --r: -214.65996046115936deg; animation-delay: 3.51241s;"></div><div class="debris" style="width: 2.46523px; height: 2.46523px; left: 164.454px; top: 222.897px; --tx: 41.43918378155171px; --ty: -9.242813662887128px; --r: -348.63714560746047deg; animation-delay: 3.19849s;"></div><div class="debris" style="width: 5.79445px; height: 5.79445px; left: 52.6191px; top: 171.568px; --tx: 31.87345370835928px; --ty: -24.93846421392021px; --r: -134.48289397530192deg; animation-delay: 4.89435s;"></div><div class="debris" style="width: 4.09192px; height: 4.09192px; left: 118.584px; top: 228.344px; --tx: -1.0101236511143696px; --ty: 11.757918474499762px; --r: 187.80313692047105deg; animation-delay: 1.95864s;"></div><div class="debris" style="width: 6.77834px; height: 6.77834px; left: 144.912px; top: 313.188px; --tx: 2.592007830423082px; --ty: 8.099397316980749px; --r: 55.80818794894503deg; animation-delay: 4.10179s;"></div><div class="debris" style="width: 2.42963px; height: 2.42963px; left: 115.898px; top: 222.168px; --tx: 35.004391104197374px; --ty: 24.669186494268637px; --r: -21.40570849653085deg; animation-delay: 2.97413s;"></div><div class="debris" style="width: 5.56904px; height: 5.56904px; left: 115.893px; top: 316.999px; --tx: 1.1572209034402814px; --ty: -30.939279743808434px; --r: -265.0353328865315deg; animation-delay: 3.32616s;"></div><div class="debris" style="width: 2.1103px; height: 2.1103px; left: 53.9437px; top: 274.366px; --tx: -79.8581285705593px; --ty: -42.33242919716702px; --r: 43.40960194232929deg; animation-delay: 4.8474s;"></div><div class="debris" style="width: 4.79539px; height: 4.79539px; left: 120.338px; top: 193.26px; --tx: 46.84059438399366px; --ty: -11.13153750913054px; --r: -256.2872612026006deg; animation-delay: 3.78435s;"></div><div class="debris" style="width: 5.71071px; height: 5.71071px; left: 232.624px; top: 154.196px; --tx: 58.78436875102145px; --ty: 15.31475075776405px; --r: 22.882881366222648deg; animation-delay: 3.59229s;"></div><div class="debris" style="width: 4.64807px; height: 4.64807px; left: 124.779px; top: 260.177px; --tx: -4.095114223905316px; --ty: -34.29403146049121px; --r: -103.0029169350621deg; animation-delay: 2.32938s;"></div><div class="debris" style="width: 5.56164px; height: 5.56164px; left: 86.008px; top: 380.575px; --tx: -33.45668603245886px; --ty: -0.8887318634473118px; --r: -330.9693029151702deg; animation-delay: 1.87325s;"></div><div class="debris" style="width: 5.08522px; height: 5.08522px; left: 186.467px; top: 215.976px; --tx: 91.98408208444064px; --ty: -43.523685324469795px; --r: 5.696016574432292deg; animation-delay: 0.0478933s;"></div><div class="debris" style="width: 3.3386px; height: 3.3386px; left: 148.695px; top: 395.604px; --tx: 20.16978216627141px; --ty: -47.48731382421312px; --r: -301.95077046806125deg; animation-delay: 1.93474s;"></div><div class="debris" style="width: 2.33265px; height: 2.33265px; left: 92.6246px; top: 333.535px; --tx: -18.756711218963986px; --ty: -11.005619174385451px; --r: 354.3047884315522deg; animation-delay: 0.995019s;"></div><div class="debris" style="width: 2.05724px; height: 2.05724px; left: 55.1982px; top: 301.151px; --tx: 6.890563161523833px; --ty: -4.303617452908304px; --r: 180.0791560705694deg; animation-delay: 0.893762s;"></div></div>
+        </div>
+
+        <!-- Foggy Card -->
+        <div class="weather-card foggy-card">
+            <div class="card-title">Foggy</div>
+            <div class="fog-layer fog-layer-1" style="--base-opacity: 0.7;"></div>
+            <div class="fog-layer fog-layer-2" style="--base-opacity: 0.6;"></div>
+            <div class="fog-layer fog-layer-3" style="--base-opacity: 0.5;"></div>
+            <div class="fog-layer fog-layer-4" style="--base-opacity: 0.7;"></div>
+            <div class="fog-layer fog-layer-5" style="--base-opacity: 0.4;"></div>
+            <div class="tree-silhouette tree-silhouette-1">
+                <div class="leaves" style="background-color: #263238;"></div>
+                <div class="trunk" style="background-color: #3e2723;"></div>
+            </div>
+            <div class="tree-silhouette tree-silhouette-2">
+                <div class="leaves" style="background-color: #263238;"></div>
+                <div class="trunk" style="background-color: #3e2723;"></div>
+            </div>
+        </div>
+
+        <!-- Cloudy Card -->
+        <div class="weather-card cloudy-card">
+            <div class="card-title">Cloudy</div>
+            <div class="sun-peek"></div>
+            <div class="big-cloud big-cloud-1"></div>
+            <div class="big-cloud big-cloud-2"></div>
+            <div class="big-cloud big-cloud-3"></div>
+        </div>
+    </div>
+
+    <!-- Third row - new extreme weather cards -->
+    <div class="container">
+        <!-- Wildfire Card -->
+        <div class="weather-card wildfire-card">
+            <div class="card-title">Wildfire</div>
+            <div class="fire-ground"></div>
+            <div id="fire-particles-container"><div class="fire-particle" style="width: 4.33713px; height: 4.33713px; left: 154.083px; bottom: 111.083px; animation-duration: 2.25573s; animation-delay: 0.691867s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 4.33713px;"></div><div class="fire-particle" style="width: 3.6513px; height: 3.6513px; left: 3.45906px; bottom: 106.702px; animation-duration: 2.88223s; animation-delay: 0.807498s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 3.6513px;"></div><div class="fire-particle" style="width: 5.08446px; height: 5.08446px; left: 161.805px; bottom: 119.254px; animation-duration: 2.13579s; animation-delay: 1.03711s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 5.08446px;"></div><div class="fire-particle" style="width: 4.44848px; height: 4.44848px; left: 156.293px; bottom: 106.735px; animation-duration: 2.35952s; animation-delay: 0.472588s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 4.44848px;"></div><div class="fire-particle" style="width: 9.85229px; height: 9.85229px; left: 6.72107px; bottom: 114.496px; animation-duration: 2.15013s; animation-delay: 1.02601s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 9.85229px;"></div><div class="fire-particle" style="width: 6.97722px; height: 6.97722px; left: 237.195px; bottom: 114.576px; animation-duration: 1.36256s; animation-delay: 1.59664s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 6.97722px;"></div><div class="fire-particle" style="width: 3.9296px; height: 3.9296px; left: 6.04515px; bottom: 117.026px; animation-duration: 2.38404s; animation-delay: 1.12931s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 3.9296px;"></div><div class="fire-particle" style="width: 2.44027px; height: 2.44027px; left: 242.186px; bottom: 106.281px; animation-duration: 1.05569s; animation-delay: 1.69279s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 2.44027px;"></div><div class="fire-particle" style="width: 2.73816px; height: 2.73816px; left: 145.152px; bottom: 111.318px; animation-duration: 1.69526s; animation-delay: 1.18939s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 2.73816px;"></div><div class="fire-particle" style="width: 5.60261px; height: 5.60261px; left: 206.609px; bottom: 110.008px; animation-duration: 2.79628s; animation-delay: 1.30063s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 5.60261px;"></div><div class="fire-particle" style="width: 6.92137px; height: 6.92137px; left: 88.7674px; bottom: 112.426px; animation-duration: 1.78973s; animation-delay: 0.108593s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 6.92137px;"></div><div class="fire-particle" style="width: 8.3465px; height: 8.3465px; left: 115.068px; bottom: 117.825px; animation-duration: 2.532s; animation-delay: 1.82751s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 8.3465px;"></div><div class="fire-particle" style="width: 3.80748px; height: 3.80748px; left: 9.36505px; bottom: 112.699px; animation-duration: 1.59508s; animation-delay: 1.14111s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 3.80748px;"></div><div class="fire-particle" style="width: 8.63003px; height: 8.63003px; left: 144.431px; bottom: 104.93px; animation-duration: 2.95838s; animation-delay: 1.51707s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 8.63003px;"></div><div class="fire-particle" style="width: 3.24885px; height: 3.24885px; left: 207.662px; bottom: 112.552px; animation-duration: 1.09471s; animation-delay: 0.0874676s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 3.24885px;"></div><div class="fire-particle" style="width: 6.45593px; height: 6.45593px; left: 234.908px; bottom: 103.905px; animation-duration: 1.27675s; animation-delay: 1.5813s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 6.45593px;"></div><div class="fire-particle" style="width: 5.04915px; height: 5.04915px; left: 214.952px; bottom: 104.933px; animation-duration: 1.36842s; animation-delay: 1.71158s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 5.04915px;"></div><div class="fire-particle" style="width: 9.85276px; height: 9.85276px; left: 93.1088px; bottom: 115.353px; animation-duration: 2.81872s; animation-delay: 0.0840623s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 9.85276px;"></div><div class="fire-particle" style="width: 7.32557px; height: 7.32557px; left: 120.777px; bottom: 115.378px; animation-duration: 1.30945s; animation-delay: 1.95378s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 7.32557px;"></div><div class="fire-particle" style="width: 7.54232px; height: 7.54232px; left: 163.636px; bottom: 103.944px; animation-duration: 2.58624s; animation-delay: 0.479608s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 7.54232px;"></div><div class="fire-particle" style="width: 7.84777px; height: 7.84777px; left: 205.144px; bottom: 100.04px; animation-duration: 1.3217s; animation-delay: 1.87227s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 7.84777px;"></div><div class="fire-particle" style="width: 6.53823px; height: 6.53823px; left: 112.65px; bottom: 106.26px; animation-duration: 2.90067s; animation-delay: 1.60289s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 6.53823px;"></div><div class="fire-particle" style="width: 7.87489px; height: 7.87489px; left: 223.578px; bottom: 108.927px; animation-duration: 2.79126s; animation-delay: 0.171327s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 7.87489px;"></div><div class="fire-particle" style="width: 2.16982px; height: 2.16982px; left: 26.555px; bottom: 116.163px; animation-duration: 1.76382s; animation-delay: 1.22032s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 2.16982px;"></div><div class="fire-particle" style="width: 2.80484px; height: 2.80484px; left: 209.581px; bottom: 111.89px; animation-duration: 2.30214s; animation-delay: 0.0999562s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 2.80484px;"></div><div class="fire-particle" style="width: 5.32482px; height: 5.32482px; left: 180.831px; bottom: 116.439px; animation-duration: 1.13732s; animation-delay: 1.02125s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 5.32482px;"></div><div class="fire-particle" style="width: 7.32293px; height: 7.32293px; left: 147.713px; bottom: 114.863px; animation-duration: 1.95393s; animation-delay: 1.64683s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 7.32293px;"></div><div class="fire-particle" style="width: 8.84824px; height: 8.84824px; left: 180.865px; bottom: 107.382px; animation-duration: 2.75292s; animation-delay: 1.68886s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 8.84824px;"></div><div class="fire-particle" style="width: 5.1565px; height: 5.1565px; left: 8.78651px; bottom: 113.501px; animation-duration: 2.48599s; animation-delay: 1.47955s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 5.1565px;"></div><div class="fire-particle" style="width: 6.30345px; height: 6.30345px; left: 215.675px; bottom: 107.024px; animation-duration: 1.92477s; animation-delay: 0.310692s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 6.30345px;"></div><div class="fire-particle" style="width: 2.39267px; height: 2.39267px; left: 82.2071px; bottom: 112.296px; animation-duration: 2.39177s; animation-delay: 0.990846s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 2.39267px;"></div><div class="fire-particle" style="width: 7.75088px; height: 7.75088px; left: 72.143px; bottom: 106.389px; animation-duration: 1.18913s; animation-delay: 1.98026s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 7.75088px;"></div><div class="fire-particle" style="width: 4.47844px; height: 4.47844px; left: 233.423px; bottom: 111.175px; animation-duration: 2.16479s; animation-delay: 0.004974s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 4.47844px;"></div><div class="fire-particle" style="width: 5.40966px; height: 5.40966px; left: 4.76494px; bottom: 115.987px; animation-duration: 1.16102s; animation-delay: 0.88379s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 5.40966px;"></div><div class="fire-particle" style="width: 8.46744px; height: 8.46744px; left: 235.688px; bottom: 111.743px; animation-duration: 2.53183s; animation-delay: 1.72562s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 8.46744px;"></div><div class="fire-particle" style="width: 5.74202px; height: 5.74202px; left: 171.081px; bottom: 105.738px; animation-duration: 2.09214s; animation-delay: 0.0519641s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 5.74202px;"></div><div class="fire-particle" style="width: 6.47504px; height: 6.47504px; left: 174.919px; bottom: 111.06px; animation-duration: 2.42538s; animation-delay: 1.80306s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 6.47504px;"></div><div class="fire-particle" style="width: 4.78243px; height: 4.78243px; left: 166.988px; bottom: 103.775px; animation-duration: 1.6534s; animation-delay: 1.94255s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 4.78243px;"></div><div class="fire-particle" style="width: 8.79559px; height: 8.79559px; left: 13.9873px; bottom: 110.719px; animation-duration: 2.22978s; animation-delay: 0.801111s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 8.79559px;"></div><div class="fire-particle" style="width: 7.6421px; height: 7.6421px; left: 57.0572px; bottom: 118.324px; animation-duration: 2.60907s; animation-delay: 0.776297s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 7.6421px;"></div><div class="fire-particle" style="width: 8.65117px; height: 8.65117px; left: 245.263px; bottom: 105.103px; animation-duration: 1.50639s; animation-delay: 1.14232s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 8.65117px;"></div><div class="fire-particle" style="width: 3.06688px; height: 3.06688px; left: 155.482px; bottom: 117.086px; animation-duration: 1.04615s; animation-delay: 1.90276s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 3.06688px;"></div><div class="fire-particle" style="width: 5.0119px; height: 5.0119px; left: 51.2728px; bottom: 110.68px; animation-duration: 2.24348s; animation-delay: 1.56962s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 5.0119px;"></div><div class="fire-particle" style="width: 4.56816px; height: 4.56816px; left: 63.8695px; bottom: 116.286px; animation-duration: 2.99988s; animation-delay: 1.6338s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 4.56816px;"></div><div class="fire-particle" style="width: 3.82569px; height: 3.82569px; left: 165.878px; bottom: 115.224px; animation-duration: 1.26053s; animation-delay: 0.525455s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 3.82569px;"></div><div class="fire-particle" style="width: 4.41686px; height: 4.41686px; left: 35.5031px; bottom: 114.895px; animation-duration: 2.54434s; animation-delay: 1.70002s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 4.41686px;"></div><div class="fire-particle" style="width: 2.90669px; height: 2.90669px; left: 88.5763px; bottom: 101.28px; animation-duration: 2.85462s; animation-delay: 1.23015s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 2.90669px;"></div><div class="fire-particle" style="width: 2.46555px; height: 2.46555px; left: 1.5958px; bottom: 119.071px; animation-duration: 1.67127s; animation-delay: 0.507936s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 2.46555px;"></div><div class="fire-particle" style="width: 6.69974px; height: 6.69974px; left: 151.231px; bottom: 114.163px; animation-duration: 1.33722s; animation-delay: 1.07198s; background-color: rgb(255, 235, 59); box-shadow: rgb(255, 235, 59) 0px 0px 6.69974px;"></div><div class="fire-particle" style="width: 7.07872px; height: 7.07872px; left: 233.757px; bottom: 106.298px; animation-duration: 1.90074s; animation-delay: 0.850536s; background-color: rgb(255, 152, 0); box-shadow: rgb(255, 152, 0) 0px 0px 7.07872px;"></div></div>
+            <div id="smoke-container"><div class="smoke" style="width: 24.1144px; height: 24.1144px; left: 162.928px; bottom: 155.719px; animation-duration: 5.45931s; animation-delay: 1.84727s; opacity: 0.533267;"></div><div class="smoke" style="width: 34.3682px; height: 34.3682px; left: 132.723px; bottom: 192.239px; animation-duration: 3.10584s; animation-delay: 1.63681s; opacity: 0.525036;"></div><div class="smoke" style="width: 27.8948px; height: 27.8948px; left: 207.716px; bottom: 188.526px; animation-duration: 3.57096s; animation-delay: 4.23377s; opacity: 0.497636;"></div><div class="smoke" style="width: 37.6723px; height: 37.6723px; left: 34.6832px; bottom: 153.894px; animation-duration: 3.85005s; animation-delay: 0.291559s; opacity: 0.697649;"></div><div class="smoke" style="width: 35.1847px; height: 35.1847px; left: 35.9339px; bottom: 161.305px; animation-duration: 3.84834s; animation-delay: 0.461397s; opacity: 0.410434;"></div><div class="smoke" style="width: 44.8342px; height: 44.8342px; left: 201.014px; bottom: 170.023px; animation-duration: 5.01578s; animation-delay: 4.83521s; opacity: 0.60997;"></div><div class="smoke" style="width: 30.6797px; height: 30.6797px; left: 69.347px; bottom: 182.306px; animation-duration: 3.00574s; animation-delay: 3.90876s; opacity: 0.697856;"></div><div class="smoke" style="width: 31.4951px; height: 31.4951px; left: 121.43px; bottom: 158.077px; animation-duration: 3.83266s; animation-delay: 0.89115s; opacity: 0.428397;"></div><div class="smoke" style="width: 40.7647px; height: 40.7647px; left: 68.8407px; bottom: 173.18px; animation-duration: 4.34238s; animation-delay: 0.262119s; opacity: 0.503692;"></div><div class="smoke" style="width: 35.6742px; height: 35.6742px; left: 84.5408px; bottom: 176.379px; animation-duration: 5.28276s; animation-delay: 2.5172s; opacity: 0.561326;"></div><div class="smoke" style="width: 42.7509px; height: 42.7509px; left: 183.352px; bottom: 176.613px; animation-duration: 4.08504s; animation-delay: 1.85508s; opacity: 0.401664;"></div><div class="smoke" style="width: 32.5437px; height: 32.5437px; left: 50.2661px; bottom: 163.651px; animation-duration: 3.72453s; animation-delay: 1.47524s; opacity: 0.481148;"></div><div class="smoke" style="width: 41.9471px; height: 41.9471px; left: 177.369px; bottom: 158.944px; animation-duration: 3.36508s; animation-delay: 4.64561s; opacity: 0.513233;"></div><div class="smoke" style="width: 43.2676px; height: 43.2676px; left: 62.0331px; bottom: 164.383px; animation-duration: 4.15334s; animation-delay: 4.83083s; opacity: 0.526633;"></div><div class="smoke" style="width: 36.8818px; height: 36.8818px; left: 103.857px; bottom: 191.323px; animation-duration: 3.69007s; animation-delay: 2.87605s; opacity: 0.603393;"></div></div>
+            <div class="tree-burning tree-burning-1">
+                <div class="tree-fire"></div>
+                <div class="tree-trunk-burning"></div>
+            </div>
+            <div class="tree-burning tree-burning-2">
+                <div class="tree-fire"></div>
+                <div class="tree-trunk-burning"></div>
+            </div>
+        </div>
+
+        <!-- Flood Card -->
+        <div class="weather-card flood-card">
+            <div class="card-title">Flood</div>
+            <div class="flood-water"></div>
+            <div class="flood-wave" style="bottom: 180px;"></div>
+            <div class="flood-wave" style="bottom: 160px; animation-delay: 1s;"></div>
+            <div class="flood-wave" style="bottom: 140px; animation-delay: 2s;"></div>
+            <div class="house house-1">
+                <div class="house-roof"></div>
+                <div class="house-base"></div>
+            </div>
+            <div class="house house-2">
+                <div class="house-roof"></div>
+                <div class="house-base"></div>
+            </div>
+            <div id="rain-particles-container"><div class="rain-particle" style="left: 48.1851px; animation-delay: 0.861911s;"></div><div class="rain-particle" style="left: 48.3119px; animation-delay: 0.858069s;"></div><div class="rain-particle" style="left: 234.341px; animation-delay: 0.460266s;"></div><div class="rain-particle" style="left: 194.687px; animation-delay: 0.647816s;"></div><div class="rain-particle" style="left: 96.8014px; animation-delay: 0.392278s;"></div><div class="rain-particle" style="left: 190.627px; animation-delay: 0.0917365s;"></div><div class="rain-particle" style="left: 234.913px; animation-delay: 0.392777s;"></div><div class="rain-particle" style="left: 52.9071px; animation-delay: 0.339572s;"></div><div class="rain-particle" style="left: 68.2485px; animation-delay: 0.342626s;"></div><div class="rain-particle" style="left: 128.632px; animation-delay: 0.331189s;"></div><div class="rain-particle" style="left: 140.845px; animation-delay: 0.312666s;"></div><div class="rain-particle" style="left: 223.889px; animation-delay: 0.943038s;"></div><div class="rain-particle" style="left: 190.08px; animation-delay: 0.368606s;"></div><div class="rain-particle" style="left: 79.1042px; animation-delay: 0.543555s;"></div><div class="rain-particle" style="left: 173.832px; animation-delay: 0.589701s;"></div><div class="rain-particle" style="left: 140.401px; animation-delay: 0.463775s;"></div><div class="rain-particle" style="left: 66.8172px; animation-delay: 0.205559s;"></div><div class="rain-particle" style="left: 189.65px; animation-delay: 0.293104s;"></div><div class="rain-particle" style="left: 231.893px; animation-delay: 0.909183s;"></div><div class="rain-particle" style="left: 187.832px; animation-delay: 0.0812326s;"></div><div class="rain-particle" style="left: 125.903px; animation-delay: 0.0785906s;"></div><div class="rain-particle" style="left: 158.796px; animation-delay: 0.544601s;"></div><div class="rain-particle" style="left: 24.632px; animation-delay: 0.87863s;"></div><div class="rain-particle" style="left: 112.434px; animation-delay: 0.881354s;"></div><div class="rain-particle" style="left: 212.542px; animation-delay: 0.858164s;"></div><div class="rain-particle" style="left: 155.176px; animation-delay: 0.556921s;"></div><div class="rain-particle" style="left: 50.7629px; animation-delay: 0.0261816s;"></div><div class="rain-particle" style="left: 47.0375px; animation-delay: 0.916638s;"></div><div class="rain-particle" style="left: 11.915px; animation-delay: 0.0664012s;"></div><div class="rain-particle" style="left: 36.7547px; animation-delay: 0.7237s;"></div><div class="rain-particle" style="left: 198.953px; animation-delay: 0.336671s;"></div><div class="rain-particle" style="left: 157.627px; animation-delay: 0.124711s;"></div><div class="rain-particle" style="left: 143.109px; animation-delay: 0.585569s;"></div><div class="rain-particle" style="left: 17.3388px; animation-delay: 0.590953s;"></div><div class="rain-particle" style="left: 215.856px; animation-delay: 0.453935s;"></div><div class="rain-particle" style="left: 98.4223px; animation-delay: 0.0277592s;"></div><div class="rain-particle" style="left: 79.1916px; animation-delay: 0.999954s;"></div><div class="rain-particle" style="left: 33.815px; animation-delay: 0.526308s;"></div><div class="rain-particle" style="left: 44.6728px; animation-delay: 0.480719s;"></div><div class="rain-particle" style="left: 192.081px; animation-delay: 0.74299s;"></div><div class="rain-particle" style="left: 178.313px; animation-delay: 0.12462s;"></div><div class="rain-particle" style="left: 69.3367px; animation-delay: 0.150465s;"></div><div class="rain-particle" style="left: 244.338px; animation-delay: 0.960158s;"></div><div class="rain-particle" style="left: 94.3163px; animation-delay: 0.293249s;"></div><div class="rain-particle" style="left: 66.5546px; animation-delay: 0.574181s;"></div><div class="rain-particle" style="left: 235.645px; animation-delay: 0.6189s;"></div><div class="rain-particle" style="left: 213.895px; animation-delay: 0.183837s;"></div><div class="rain-particle" style="left: 19.8935px; animation-delay: 0.371398s;"></div><div class="rain-particle" style="left: 52.4821px; animation-delay: 0.909689s;"></div><div class="rain-particle" style="left: 134.385px; animation-delay: 0.112533s;"></div><div class="rain-particle" style="left: 16.389px; animation-delay: 0.61778s;"></div><div class="rain-particle" style="left: 222.428px; animation-delay: 0.751661s;"></div><div class="rain-particle" style="left: 225.334px; animation-delay: 0.815706s;"></div><div class="rain-particle" style="left: 149.354px; animation-delay: 0.397168s;"></div><div class="rain-particle" style="left: 18.2679px; animation-delay: 0.734355s;"></div><div class="rain-particle" style="left: 51.9516px; animation-delay: 0.891105s;"></div><div class="rain-particle" style="left: 186.31px; animation-delay: 0.996549s;"></div><div class="rain-particle" style="left: 113.626px; animation-delay: 0.102362s;"></div><div class="rain-particle" style="left: 118.928px; animation-delay: 0.836139s;"></div><div class="rain-particle" style="left: 141.226px; animation-delay: 0.748706s;"></div><div class="rain-particle" style="left: 18.0417px; animation-delay: 0.19442s;"></div><div class="rain-particle" style="left: 45.4513px; animation-delay: 0.477032s;"></div><div class="rain-particle" style="left: 240.452px; animation-delay: 0.737349s;"></div><div class="rain-particle" style="left: 93.6022px; animation-delay: 0.959051s;"></div><div class="rain-particle" style="left: 100.303px; animation-delay: 0.120916s;"></div><div class="rain-particle" style="left: 43.0156px; animation-delay: 0.912268s;"></div><div class="rain-particle" style="left: 83.8278px; animation-delay: 0.533232s;"></div><div class="rain-particle" style="left: 104.38px; animation-delay: 0.163206s;"></div><div class="rain-particle" style="left: 249.148px; animation-delay: 0.137611s;"></div><div class="rain-particle" style="left: 132.735px; animation-delay: 0.613537s;"></div><div class="rain-particle" style="left: 159.619px; animation-delay: 0.586923s;"></div><div class="rain-particle" style="left: 155.645px; animation-delay: 0.866732s;"></div><div class="rain-particle" style="left: 103.614px; animation-delay: 0.138703s;"></div><div class="rain-particle" style="left: 71.4771px; animation-delay: 0.954226s;"></div><div class="rain-particle" style="left: 191.545px; animation-delay: 0.245474s;"></div><div class="rain-particle" style="left: 189.549px; animation-delay: 0.861251s;"></div><div class="rain-particle" style="left: 2.15012px; animation-delay: 0.199065s;"></div><div class="rain-particle" style="left: 37.8946px; animation-delay: 0.0517908s;"></div><div class="rain-particle" style="left: 20.8646px; animation-delay: 0.864047s;"></div><div class="rain-particle" style="left: 176.032px; animation-delay: 0.290428s;"></div><div class="rain-particle" style="left: 106.131px; animation-delay: 0.526765s;"></div><div class="rain-particle" style="left: 201.745px; animation-delay: 0.247575s;"></div><div class="rain-particle" style="left: 103.336px; animation-delay: 0.0662772s;"></div><div class="rain-particle" style="left: 146.366px; animation-delay: 0.660952s;"></div><div class="rain-particle" style="left: 43.7563px; animation-delay: 0.409983s;"></div><div class="rain-particle" style="left: 175.615px; animation-delay: 0.184275s;"></div><div class="rain-particle" style="left: 105.335px; animation-delay: 0.0306934s;"></div><div class="rain-particle" style="left: 68.3996px; animation-delay: 0.454715s;"></div><div class="rain-particle" style="left: 6.21781px; animation-delay: 0.0384412s;"></div><div class="rain-particle" style="left: 113.854px; animation-delay: 0.760003s;"></div><div class="rain-particle" style="left: 87.4844px; animation-delay: 0.446697s;"></div><div class="rain-particle" style="left: 37.4498px; animation-delay: 0.592563s;"></div><div class="rain-particle" style="left: 21.1975px; animation-delay: 0.36126s;"></div><div class="rain-particle" style="left: 114.822px; animation-delay: 0.620802s;"></div><div class="rain-particle" style="left: 80.9891px; animation-delay: 0.714672s;"></div><div class="rain-particle" style="left: 22.0506px; animation-delay: 0.068723s;"></div><div class="rain-particle" style="left: 182.687px; animation-delay: 0.136108s;"></div><div class="rain-particle" style="left: 118.281px; animation-delay: 0.495621s;"></div><div class="rain-particle" style="left: 51.9846px; animation-delay: 0.915259s;"></div><div class="rain-particle" style="left: 226.594px; animation-delay: 0.143969s;"></div></div>
+        </div>
+
+        <!-- Tsunami Card -->
+        <div class="weather-card tsunami-card">
+            <div class="card-title">Tsunami</div>
+            <div class="ocean"></div>
+            <div class="tsunami-wave">
+                <div class="wave-highlight"></div>
+                <div class="wave-foam"></div>
+            </div>
+            <div class="boat boat-1"></div>
+            <div class="boat boat-2"></div>
+        </div>
+
+        <!-- Hurricane Card -->
+        <div class="weather-card hurricane-card">
+            <div class="card-title">Hurricane</div>
+            <div class="hurricane-eye"></div>
+            <div class="hurricane-band hurricane-band-1"></div>
+            <div class="hurricane-band hurricane-band-2"></div>
+            <div class="hurricane-band hurricane-band-3"></div>
+            <div class="hurricane-band hurricane-band-4"></div>
+            <div id="hurricane-clouds-container"><div class="hurricane-cloud" style="width: 59.872px; height: 35.9232px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 10s linear 0s infinite normal none running hurricaneCloudMove;"></div><div class="hurricane-cloud" style="width: 59.1956px; height: 35.5174px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 11s linear 0.5s infinite normal none running hurricaneCloudMove;"></div><div class="hurricane-cloud" style="width: 68.2103px; height: 40.9262px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 12s linear 1s infinite normal none running hurricaneCloudMove;"></div><div class="hurricane-cloud" style="width: 38.94px; height: 23.364px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 13s linear 1.5s infinite normal none running hurricaneCloudMove;"></div><div class="hurricane-cloud" style="width: 42.1325px; height: 25.2795px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 14s linear 2s infinite normal none running hurricaneCloudMove;"></div><div class="hurricane-cloud" style="width: 51.0499px; height: 30.63px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 15s linear 2.5s infinite normal none running hurricaneCloudMove;"></div><div class="hurricane-cloud" style="width: 69.4929px; height: 41.6958px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 16s linear 3s infinite normal none running hurricaneCloudMove;"></div><div class="hurricane-cloud" style="width: 51.7214px; height: 31.0328px; top: 150px; left: 125px; transform-origin: 0px 0px; animation: 17s linear 3.5s infinite normal none running hurricaneCloudMove;"></div></div>
+            <div id="hurricane-rain-container"><div class="rain-streak" style="left: 215.725px; top: 171.228px; animation-delay: 0.0407608s;"></div><div class="rain-streak" style="left: 181.589px; top: 237.976px; animation-delay: 0.281878s;"></div><div class="rain-streak" style="left: 183.398px; top: 0.463835px; animation-delay: 0.847332s;"></div><div class="rain-streak" style="left: 114.024px; top: 293.494px; animation-delay: 0.492773s;"></div><div class="rain-streak" style="left: 117.463px; top: 72.0265px; animation-delay: 0.680784s;"></div><div class="rain-streak" style="left: 239.642px; top: 115.375px; animation-delay: 0.642093s;"></div><div class="rain-streak" style="left: 138.176px; top: 318.415px; animation-delay: 0.177198s;"></div><div class="rain-streak" style="left: 28.1033px; top: 349.667px; animation-delay: 0.663747s;"></div><div class="rain-streak" style="left: 237.565px; top: 306.754px; animation-delay: 0.732027s;"></div><div class="rain-streak" style="left: 54.1015px; top: 222.075px; animation-delay: 0.672801s;"></div><div class="rain-streak" style="left: 31.8238px; top: 209.595px; animation-delay: 0.082594s;"></div><div class="rain-streak" style="left: 120.34px; top: 346.756px; animation-delay: 0.376491s;"></div><div class="rain-streak" style="left: 85.8152px; top: 215.111px; animation-delay: 0.789541s;"></div><div class="rain-streak" style="left: 144.927px; top: 347.506px; animation-delay: 0.139084s;"></div><div class="rain-streak" style="left: 226.35px; top: 299.048px; animation-delay: 0.775051s;"></div><div class="rain-streak" style="left: 80.9258px; top: 76.5755px; animation-delay: 0.985066s;"></div><div class="rain-streak" style="left: 193.692px; top: 198.717px; animation-delay: 0.906755s;"></div><div class="rain-streak" style="left: 150.419px; top: 165.243px; animation-delay: 0.32016s;"></div><div class="rain-streak" style="left: 247.882px; top: 256.241px; animation-delay: 0.676207s;"></div><div class="rain-streak" style="left: 98.4182px; top: 245.547px; animation-delay: 0.162326s;"></div><div class="rain-streak" style="left: 182.815px; top: 171.225px; animation-delay: 0.991059s;"></div><div class="rain-streak" style="left: 73.7562px; top: 341.297px; animation-delay: 0.341545s;"></div><div class="rain-streak" style="left: 209.759px; top: 251.854px; animation-delay: 0.890331s;"></div><div class="rain-streak" style="left: 152.002px; top: 43.6264px; animation-delay: 0.798836s;"></div><div class="rain-streak" style="left: 186.13px; top: 186.729px; animation-delay: 0.0897373s;"></div><div class="rain-streak" style="left: 44.7874px; top: 94.9042px; animation-delay: 0.886844s;"></div><div class="rain-streak" style="left: 125.378px; top: 102.015px; animation-delay: 0.429472s;"></div><div class="rain-streak" style="left: 72.8935px; top: 269.815px; animation-delay: 0.215125s;"></div><div class="rain-streak" style="left: 208.239px; top: 162.098px; animation-delay: 0.737928s;"></div><div class="rain-streak" style="left: 227.503px; top: 324.662px; animation-delay: 0.283466s;"></div><div class="rain-streak" style="left: 102.198px; top: 155.567px; animation-delay: 0.385822s;"></div><div class="rain-streak" style="left: 159.17px; top: 187.659px; animation-delay: 0.0766466s;"></div><div class="rain-streak" style="left: 100.769px; top: 254.151px; animation-delay: 0.0378382s;"></div><div class="rain-streak" style="left: 150.427px; top: 55.9589px; animation-delay: 0.434291s;"></div><div class="rain-streak" style="left: 104.151px; top: 248.338px; animation-delay: 0.684557s;"></div><div class="rain-streak" style="left: 55.3362px; top: 340.565px; animation-delay: 0.538954s;"></div><div class="rain-streak" style="left: 246.068px; top: 212.895px; animation-delay: 0.448846s;"></div><div class="rain-streak" style="left: 212.984px; top: 342.098px; animation-delay: 0.669796s;"></div><div class="rain-streak" style="left: 237.086px; top: 91.9211px; animation-delay: 0.920449s;"></div><div class="rain-streak" style="left: 82.8032px; top: 186.396px; animation-delay: 0.15351s;"></div><div class="rain-streak" style="left: 194.75px; top: 37.8524px; animation-delay: 0.397847s;"></div><div class="rain-streak" style="left: 184.164px; top: 187.925px; animation-delay: 0.826992s;"></div><div class="rain-streak" style="left: 146.141px; top: 292.812px; animation-delay: 0.0744771s;"></div><div class="rain-streak" style="left: 124.731px; top: 81.5816px; animation-delay: 0.459045s;"></div><div class="rain-streak" style="left: 223.381px; top: 34.2271px; animation-delay: 0.610645s;"></div><div class="rain-streak" style="left: 226.32px; top: 168.773px; animation-delay: 0.678046s;"></div><div class="rain-streak" style="left: 88.0554px; top: 184.65px; animation-delay: 0.324002s;"></div><div class="rain-streak" style="left: 209.036px; top: 161.395px; animation-delay: 0.463588s;"></div><div class="rain-streak" style="left: 89.2657px; top: 41.3735px; animation-delay: 0.544528s;"></div><div class="rain-streak" style="left: 90.4267px; top: 106.943px; animation-delay: 0.869176s;"></div><div class="rain-streak" style="left: 242.787px; top: 163.09px; animation-delay: 0.665339s;"></div><div class="rain-streak" style="left: 140.673px; top: 184.4px; animation-delay: 0.83064s;"></div><div class="rain-streak" style="left: 154.94px; top: 108.886px; animation-delay: 0.737464s;"></div><div class="rain-streak" style="left: 160.648px; top: 251.404px; animation-delay: 0.172476s;"></div><div class="rain-streak" style="left: 9.33658px; top: 325.752px; animation-delay: 0.306045s;"></div><div class="rain-streak" style="left: 21.2848px; top: 78.6358px; animation-delay: 0.900031s;"></div><div class="rain-streak" style="left: 192.865px; top: 293.9px; animation-delay: 0.672231s;"></div><div class="rain-streak" style="left: 67.1985px; top: 309.688px; animation-delay: 0.607902s;"></div><div class="rain-streak" style="left: 211.675px; top: 140.361px; animation-delay: 0.314581s;"></div><div class="rain-streak" style="left: 14.3136px; top: 0.508914px; animation-delay: 0.776517s;"></div><div class="rain-streak" style="left: 232.519px; top: 309.603px; animation-delay: 0.758683s;"></div><div class="rain-streak" style="left: 217.144px; top: 249.242px; animation-delay: 0.335118s;"></div><div class="rain-streak" style="left: 153.06px; top: 241.62px; animation-delay: 0.888271s;"></div><div class="rain-streak" style="left: 178.367px; top: 74.1068px; animation-delay: 0.453703s;"></div><div class="rain-streak" style="left: 237.079px; top: 162.551px; animation-delay: 0.767064s;"></div><div class="rain-streak" style="left: 119.198px; top: 17.3828px; animation-delay: 0.0905003s;"></div><div class="rain-streak" style="left: 231.787px; top: 295.166px; animation-delay: 0.814221s;"></div><div class="rain-streak" style="left: 106.512px; top: 31.6941px; animation-delay: 0.0986169s;"></div><div class="rain-streak" style="left: 188.649px; top: 225.847px; animation-delay: 0.0681156s;"></div><div class="rain-streak" style="left: 73.087px; top: 307.336px; animation-delay: 0.414503s;"></div><div class="rain-streak" style="left: 195.654px; top: 20.7414px; animation-delay: 0.513967s;"></div><div class="rain-streak" style="left: 241.482px; top: 196.446px; animation-delay: 0.229466s;"></div><div class="rain-streak" style="left: 5.31303px; top: 225.107px; animation-delay: 0.395516s;"></div><div class="rain-streak" style="left: 61.8967px; top: 183.697px; animation-delay: 0.782768s;"></div><div class="rain-streak" style="left: 10.7716px; top: 272.707px; animation-delay: 0.108663s;"></div><div class="rain-streak" style="left: 124.708px; top: 189.018px; animation-delay: 0.985015s;"></div><div class="rain-streak" style="left: 217.925px; top: 29.5176px; animation-delay: 0.927667s;"></div><div class="rain-streak" style="left: 64.7383px; top: 4.93472px; animation-delay: 0.746795s;"></div><div class="rain-streak" style="left: 144.542px; top: 85.2837px; animation-delay: 0.654127s;"></div><div class="rain-streak" style="left: 234.849px; top: 123.321px; animation-delay: 0.445681s;"></div><div class="rain-streak" style="left: 46.119px; top: 185.982px; animation-delay: 0.213565s;"></div><div class="rain-streak" style="left: 65.9859px; top: 267.24px; animation-delay: 0.484803s;"></div><div class="rain-streak" style="left: 10.5911px; top: 137.711px; animation-delay: 0.188925s;"></div><div class="rain-streak" style="left: 205.003px; top: 25.2302px; animation-delay: 0.515725s;"></div><div class="rain-streak" style="left: 144.938px; top: 248.186px; animation-delay: 0.292736s;"></div><div class="rain-streak" style="left: 247.419px; top: 19.9173px; animation-delay: 0.396265s;"></div><div class="rain-streak" style="left: 185.413px; top: 245.969px; animation-delay: 0.348433s;"></div><div class="rain-streak" style="left: 216.546px; top: 271.043px; animation-delay: 0.282469s;"></div><div class="rain-streak" style="left: 87.3871px; top: 43.3867px; animation-delay: 0.54985s;"></div><div class="rain-streak" style="left: 153.062px; top: 220.202px; animation-delay: 0.934453s;"></div><div class="rain-streak" style="left: 116.521px; top: 18.129px; animation-delay: 0.506266s;"></div><div class="rain-streak" style="left: 187.949px; top: 158.916px; animation-delay: 0.191274s;"></div><div class="rain-streak" style="left: 217.848px; top: 160.696px; animation-delay: 0.422321s;"></div><div class="rain-streak" style="left: 201.093px; top: 284.597px; animation-delay: 0.491318s;"></div><div class="rain-streak" style="left: 89.0772px; top: 189.455px; animation-delay: 0.237608s;"></div><div class="rain-streak" style="left: 228.786px; top: 254.507px; animation-delay: 0.731877s;"></div><div class="rain-streak" style="left: 117.729px; top: 72.4367px; animation-delay: 0.959761s;"></div><div class="rain-streak" style="left: 77.2153px; top: 154.792px; animation-delay: 0.710052s;"></div><div class="rain-streak" style="left: 128.025px; top: 37.8006px; animation-delay: 0.985217s;"></div><div class="rain-streak" style="left: 10.7034px; top: 188.816px; animation-delay: 0.65333s;"></div></div>
+        </div>
+    </div>
+
+    <script>
+        // Create raindrops
+        function createRaindrops() {
+            const container = document.getElementById('raindrops-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 20; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                
+                // Random position
+                const left = Math.random() * (cardWidth - 20) + 10;
+                const delay = Math.random() * 1.5;
+                
+                raindrop.style.left = `${left}px`;
+                raindrop.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(raindrop);
+            }
+        }
+
+        // Create sun rays
+        function createSunRays() {
+            const container = document.getElementById('sun-rays-container');
+            const centerX = 125; // Half of card width
+            const centerY = 100; // Sun position
+            
+            for (let i = 0; i < 12; i++) {
+                const ray = document.createElement('div');
+                ray.className = 'sun-ray';
+                
+                const angle = (i * 30) * (Math.PI / 180);
+                const length = 100;
+                const width = 3;
+                
+                ray.style.width = `${width}px`;
+                ray.style.height = `${length}px`;
+                ray.style.transformOrigin = 'center bottom';
+                ray.style.transform = `translate(${centerX}px, ${centerY}px) rotate(${angle}rad) translateY(-${length / 2}px)`;
+                ray.style.animation = `pulse 3s ease-in-out infinite`;
+                ray.style.animationDelay = `${i * 0.1}s`;
+                
+                container.appendChild(ray);
+            }
+        }
+
+        // Create snowflakes
+        function createSnowflakes() {
+            const container = document.getElementById('snowflakes-container');
+            const cardWidth = 250;
+            const snowflakeChars = ['❄', '❅', '❆', '✻', '✼', '❉'];
+            
+            for (let i = 0; i < 30; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                
+                // Random position, size, and character
+                const left = Math.random() * cardWidth;
+                const size = Math.random() * 10 + 10;
+                const duration = Math.random() * 5 + 5;
+                const delay = Math.random() * 5;
+                const char = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+                
+                snowflake.textContent = char;
+                snowflake.style.left = `${left}px`;
+                snowflake.style.fontSize = `${size}px`;
+                snowflake.style.animationDuration = `${duration}s`;
+                snowflake.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(snowflake);
+            }
+        }
+
+        // Create thunder raindrops
+        function createThunderRaindrops() {
+            const container = document.getElementById('thunder-raindrops-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 30; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'thunder-raindrop';
+                
+                // Random position
+                const left = Math.random() * (cardWidth - 20) + 10;
+                const delay = Math.random() * 1.5;
+                
+                raindrop.style.left = `${left}px`;
+                raindrop.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(raindrop);
+            }
+        }
+
+        // Create debris for tornado
+        function createDebris() {
+            const container = document.getElementById('debris-container');
+            const cardWidth = 250;
+            const cardHeight = 350;
+            
+            for (let i = 0; i < 20; i++) {
+                const debris = document.createElement('div');
+                debris.className = 'debris';
+                
+                // Random size, position, and movement
+                const size = Math.random() * 5 + 2;
+                const startX = Math.random() * cardWidth;
+                const startY = Math.random() * (cardHeight - 100) + 150;
+                const tx = (Math.random() - 0.5) * 200;
+                const ty = (Math.random() - 0.5) * 100;
+                const rotation = Math.random() * 720 - 360;
+                const delay = Math.random() * 5;
+                
+                debris.style.width = `${size}px`;
+                debris.style.height = `${size}px`;
+                debris.style.left = `${startX}px`;
+                debris.style.top = `${startY}px`;
+                debris.style.setProperty('--tx', `${tx}px`);
+                debris.style.setProperty('--ty', `${ty}px`);
+                debris.style.setProperty('--r', `${rotation}deg`);
+                debris.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(debris);
+            }
+        }
+
+        // Create fire particles
+        function createFireParticles() {
+            const container = document.getElementById('fire-particles-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'fire-particle';
+                
+                // Random size, position, and duration
+                const size = Math.random() * 8 + 2;
+                const left = Math.random() * cardWidth;
+                const duration = Math.random() * 2 + 1;
+                const delay = Math.random() * 2;
+                const color = Math.random() > 0.5 ? '#ffeb3b' : '#ff9800';
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}px`;
+                particle.style.bottom = `${100 + Math.random() * 20}px`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 ${size}px ${color}`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Create smoke particles
+        function createSmokeParticles() {
+            const container = document.getElementById('smoke-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 15; i++) {
+                const smoke = document.createElement('div');
+                smoke.className = 'smoke';
+                
+                // Random size, position, and duration
+                const size = Math.random() * 30 + 20;
+                const left = Math.random() * (cardWidth - 40) + 20;
+                const duration = Math.random() * 3 + 3;
+                const delay = Math.random() * 5;
+                const opacity = Math.random() * 0.3 + 0.4;
+                
+                smoke.style.width = `${size}px`;
+                smoke.style.height = `${size}px`;
+                smoke.style.left = `${left}px`;
+                smoke.style.bottom = `${150 + Math.random() * 50}px`;
+                smoke.style.animationDuration = `${duration}s`;
+                smoke.style.animationDelay = `${delay}s`;
+                smoke.style.opacity = opacity;
+                
+                container.appendChild(smoke);
+            }
+        }
+
+        // Create rain particles for flood
+        function createRainParticles() {
+            const container = document.getElementById('rain-particles-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 100; i++) {
+                const rain = document.createElement('div');
+                rain.className = 'rain-particle';
+                
+                // Random position and delay
+                const left = Math.random() * cardWidth;
+                const delay = Math.random();
+                
+                rain.style.left = `${left}px`;
+                rain.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(rain);
+            }
+        }
+
+        // Create hurricane clouds
+        function createHurricaneClouds() {
+            const container = document.getElementById('hurricane-clouds-container');
+            const centerX = 125; // Half of card width
+            const centerY = 150; // Hurricane center
+            
+            for (let i = 0; i < 8; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'hurricane-cloud';
+                
+                // Random size and position around the center
+                const size = Math.random() * 40 + 30;
+                const angle = (i * 45) * (Math.PI / 180);
+                const radius = Math.random() * 20 + 100;
+                const delay = i * 0.5;
+                
+                cloud.style.width = `${size}px`;
+                cloud.style.height = `${size * 0.6}px`;
+                cloud.style.top = `${centerY}px`;
+                cloud.style.left = `${centerX}px`;
+                cloud.style.transformOrigin = `0 0`;
+                cloud.style.animation = `hurricaneCloudMove ${10 + i}s linear infinite`;
+                cloud.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(cloud);
+            }
+        }
+
+        // Create hurricane rain streaks
+        function createHurricaneRain() {
+            const container = document.getElementById('hurricane-rain-container');
+            const cardWidth = 250;
+            const cardHeight = 350;
+            
+            for (let i = 0; i < 100; i++) {
+                const rain = document.createElement('div');
+                rain.className = 'rain-streak';
+                
+                // Random position and delay
+                const left = Math.random() * cardWidth;
+                const top = Math.random() * cardHeight;
+                const delay = Math.random();
+                
+                rain.style.left = `${left}px`;
+                rain.style.top = `${top}px`;
+                rain.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(rain);
+            }
+        }
+
+        // Initialize all animations
+        window.onload = function() {
+            createRaindrops();
+            createSunRays();
+            createSnowflakes();
+            createThunderRaindrops();
+            createDebris();
+            
+            // New extreme weather animations
+            createFireParticles();
+            createSmokeParticles();
+            createRainParticles();
+            createHurricaneClouds();
+            createHurricaneRain();
+        };
+    </script>
+
+ </body></html>

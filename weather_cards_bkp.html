@@ -1,0 +1,3943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Weather Cards</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            /* max-width: 1600px; */
+            margin-bottom: 30px;
+        }
+
+        .weather-card {
+            width: 250px;
+            height: 350px;
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-title {
+            text-align: center;
+            padding: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Wind Card */
+        .wind-card {
+            background: linear-gradient(to bottom, #2c3e50, #34495e);
+        }
+
+        .cloud {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .cloud-1 {
+            width: 100px;
+            height: 40px;
+            top: 100px;
+            left: -100px;
+            animation: moveCloud 15s linear infinite;
+        }
+
+        .cloud-2 {
+            width: 70px;
+            height: 30px;
+            top: 150px;
+            left: -70px;
+            animation: moveCloud 12s linear infinite;
+            animation-delay: 2s;
+        }
+
+        .cloud-3 {
+            width: 120px;
+            height: 45px;
+            top: 200px;
+            left: -120px;
+            animation: moveCloud 18s linear infinite;
+            animation-delay: 5s;
+        }
+
+        .wind-line {
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.5);
+            position: absolute;
+            z-index: 1;
+            animation: windLine 3s linear infinite;
+        }
+
+        .wind-line-1 {
+            width: 50px;
+            top: 120px;
+            left: -50px;
+        }
+
+        .wind-line-2 {
+            width: 70px;
+            top: 170px;
+            left: -70px;
+            animation-delay: 0.5s;
+        }
+
+        .wind-line-3 {
+            width: 40px;
+            top: 220px;
+            left: -40px;
+            animation-delay: 1s;
+        }
+
+        .tree {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .trunk {
+            width: 10px;
+            height: 60px;
+            background-color: #5d4037;
+            margin: 0 auto;
+        }
+
+        .leaves {
+            width: 60px;
+            height: 80px;
+            background-color: #2e7d32;
+            border-radius: 50% 50% 5% 5%;
+            margin: 0 auto;
+            transform-origin: bottom center;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        /* Rain Card */
+        .rain-card {
+            background: linear-gradient(to bottom, #37474f, #546e7a);
+        }
+
+        .rain-cloud {
+            width: 120px;
+            height: 50px;
+            background-color: #78909c;
+            border-radius: 50px;
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .raindrop {
+            position: absolute;
+            background-color: rgba(120, 190, 255, 0.7);
+            width: 3px;
+            height: 15px;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            animation: rain 1.5s linear infinite;
+            z-index: 1;
+        }
+
+        .puddle {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 20px;
+            background-color: rgba(120, 190, 255, 0.3);
+            border-radius: 50%;
+            z-index: 1;
+            animation: puddle 3s ease-in-out infinite;
+        }
+
+        /* Sun Card */
+        .sun-card {
+            background: linear-gradient(to bottom, #ff9800, #ff5722);
+            overflow: hidden;
+        }
+
+        .sun {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 50px #ffeb3b, 0 0 100px #ffeb3b;
+            animation: pulse 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .sun-ray {
+            position: absolute;
+            background-color: rgba(255, 235, 59, 0.7);
+            z-index: 0;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background-color: #e57373;
+            z-index: 1;
+        }
+
+        .heat-wave {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: heatWave 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        /* Snow Card */
+        .snow-card {
+            background: linear-gradient(to bottom, #90a4ae, #cfd8dc);
+        }
+
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            animation: snowfall linear infinite;
+            z-index: 1;
+        }
+
+        .snow-ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background-color: white;
+            border-radius: 50% 50% 0 0 / 10%;
+            z-index: 1;
+        }
+
+        .snow-pile {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .snow-pile-1 {
+            width: 80px;
+            height: 30px;
+            bottom: 50px;
+            left: 30px;
+        }
+
+        .snow-pile-2 {
+            width: 100px;
+            height: 40px;
+            bottom: 40px;
+            right: 20px;
+        }
+
+        /* Thunderstorm Card */
+        .thunderstorm-card {
+            background: linear-gradient(to bottom, #263238, #37474f);
+        }
+
+        .thunder-cloud {
+            position: absolute;
+            background-color: #455a64;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .thunder-cloud-1 {
+            width: 150px;
+            height: 60px;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .thunder-cloud-2 {
+            width: 100px;
+            height: 40px;
+            top: 100px;
+            left: 40%;
+            transform: translateX(-50%);
+        }
+
+        .lightning {
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 100px;
+            background-color: #ffeb3b;
+            clip-path: polygon(50% 0%, 0% 40%, 40% 40%, 10% 100%, 90% 40%, 60% 40%, 50% 0%);
+            animation: lightning 4s ease-in-out infinite;
+            z-index: 2;
+            opacity: 0;
+            filter: blur(1px);
+            box-shadow: 0 0 10px 2px rgba(255, 235, 59, 0.8);
+        }
+
+        .thunder-raindrop {
+            position: absolute;
+            background-color: rgba(120, 190, 255, 0.7);
+            width: 3px;
+            height: 15px;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            animation: rain 1.5s linear infinite;
+            z-index: 1;
+        }
+
+        /* Tornado Card */
+        .tornado-card {
+            background: linear-gradient(to bottom, #455a64, #607d8b);
+        }
+
+        .tornado-funnel {
+            position: absolute;
+            background-color: rgba(120, 144, 156, 0.8);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: rotateTornado 3s linear infinite;
+        }
+
+        .tornado-section-1 {
+            width: 100px;
+            height: 30px;
+            top: 110px;
+        }
+
+        .tornado-section-2 {
+            width: 80px;
+            height: 30px;
+            top: 140px;
+        }
+
+        .tornado-section-3 {
+            width: 60px;
+            height: 30px;
+            top: 170px;
+        }
+
+        .tornado-section-4 {
+            width: 40px;
+            height: 30px;
+            top: 200px;
+        }
+
+        .tornado-section-5 {
+            width: 20px;
+            height: 30px;
+            top: 230px;
+        }
+
+        .debris {
+            position: absolute;
+            background-color: #8d6e63;
+            border-radius: 2px;
+            z-index: 1;
+            animation: debrisFloat 4s linear infinite;
+        }
+
+        /* Foggy Card */
+        .foggy-card {
+            background: linear-gradient(to bottom, #78909c, #b0bec5);
+        }
+
+        .fog-layer {
+            position: absolute;
+            width: 300px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fogMove 8s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .fog-layer-1 {
+            top: 100px;
+        }
+
+        .fog-layer-2 {
+            top: 130px;
+            animation-delay: 1s;
+            opacity: 0.6;
+        }
+
+        .fog-layer-3 {
+            top: 160px;
+            animation-delay: 2s;
+            opacity: 0.5;
+        }
+
+        .fog-layer-4 {
+            top: 190px;
+            animation-delay: 3s;
+            opacity: 0.7;
+        }
+
+        .fog-layer-5 {
+            top: 220px;
+            animation-delay: 4s;
+            opacity: 0.4;
+        }
+
+        .tree-silhouette {
+            position: absolute;
+            bottom: 50px;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .tree-silhouette-1 {
+            left: 50px;
+        }
+
+        .tree-silhouette-2 {
+            right: 50px;
+        }
+
+        /* Cloudy Card */
+        .cloudy-card {
+            background: linear-gradient(to bottom, #607d8b, #90a4ae);
+        }
+
+        .big-cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50px;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .big-cloud-1 {
+            width: 150px;
+            height: 60px;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: cloudFloat 6s ease-in-out infinite;
+        }
+
+        .big-cloud-2 {
+            width: 100px;
+            height: 40px;
+            top: 150px;
+            left: 30%;
+            transform: translateX(-50%);
+            animation: cloudFloat 8s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        .big-cloud-3 {
+            width: 120px;
+            height: 50px;
+            top: 200px;
+            left: 70%;
+            transform: translateX(-50%);
+            animation: cloudFloat 7s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+
+        .sun-peek {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            top: 70px;
+            right: 30px;
+            box-shadow: 0 0 20px #ffeb3b;
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        /* Wildfire Card */
+        .wildfire-card {
+            background: linear-gradient(to bottom, #bf360c, #ff5722);
+            overflow: hidden;
+        }
+
+        .fire-ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #3e2723;
+            z-index: 1;
+        }
+
+        .fire-particle {
+            position: absolute;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            z-index: 2;
+            animation: fireRise linear infinite;
+            filter: blur(1px);
+        }
+
+        .tree-burning {
+            position: absolute;
+            bottom: 100px;
+            z-index: 2;
+        }
+
+        .tree-burning-1 {
+            left: 60px;
+        }
+
+        .tree-burning-2 {
+            right: 60px;
+        }
+
+        .tree-trunk-burning {
+            width: 10px;
+            height: 60px;
+            background-color: #5d4037;
+            margin: 0 auto;
+        }
+
+        .tree-fire {
+            width: 40px;
+            height: 60px;
+            margin: 0 auto;
+            background: linear-gradient(to top, #ff9800, #f44336, #ffeb3b);
+            border-radius: 50% 50% 20% 20%;
+            animation: flicker 0.5s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px #ff9800;
+        }
+
+        .smoke {
+            position: absolute;
+            background-color: rgba(120, 120, 120, 0.7);
+            border-radius: 50%;
+            animation: smokeRise 4s ease-out infinite;
+            z-index: 3;
+        }
+
+        /* Flood Card */
+        .flood-card {
+            background: linear-gradient(to bottom, #1565c0, #0d47a1);
+            overflow: hidden;
+        }
+
+        .flood-water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, rgba(33, 150, 243, 0.7), #1565c0);
+            z-index: 1;
+            animation: waterRise 10s ease-in-out infinite alternate;
+        }
+
+        .flood-wave {
+            position: absolute;
+            height: 20px;
+            width: 300px;
+            background-color: rgba(33, 150, 243, 0.5);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: floodWave 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .house {
+            position: absolute;
+            bottom: 180px;
+            z-index: 2;
+            animation: floatObject 3s ease-in-out infinite;
+        }
+
+        .house-1 {
+            left: 50px;
+        }
+
+        .house-2 {
+            right: 50px;
+            animation-delay: 1.5s;
+        }
+
+        .house-base {
+            width: 40px;
+            height: 30px;
+            background-color: #e57373;
+        }
+
+        .house-roof {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 20px solid #c62828;
+            margin-left: -5px;
+        }
+
+        .rain-particle {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background-color: rgba(33, 150, 243, 0.7);
+            animation: heavyRain 1s linear infinite;
+            z-index: 3;
+        }
+
+        /* Tsunami Card */
+        .tsunami-card {
+            background: linear-gradient(to bottom, #01579b, #0277bd);
+            overflow: hidden;
+        }
+
+        .ocean {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background-color: #01579b;
+            z-index: 1;
+        }
+
+        .tsunami-wave {
+            position: absolute;
+            width: 300px;
+            height: 150px;
+            background-color: #0288d1;
+            border-radius: 50% 50% 0 0;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 100px;
+            z-index: 2;
+            animation: tsunamiWave 8s ease-in-out infinite;
+            overflow: hidden;
+        }
+
+        .wave-highlight {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background-color: rgba(79, 195, 247, 0.5);
+            top: 30px;
+            border-radius: 50%;
+            animation: waveHighlight 8s ease-in-out infinite;
+        }
+
+        .wave-foam {
+            position: absolute;
+            width: 300px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            top: -15px;
+            left: 0;
+            z-index: 3;
+            animation: waveFoam 8s ease-in-out infinite;
+        }
+
+        .boat {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background-color: #795548;
+            border-radius: 5px 5px 0 0;
+            z-index: 3;
+            animation: boatRock 3s ease-in-out infinite;
+        }
+
+        .boat-1 {
+            bottom: 200px;
+            left: 50px;
+        }
+
+        .boat-2 {
+            bottom: 220px;
+            right: 50px;
+            animation-delay: 1.5s;
+        }
+
+        /* Hurricane Card */
+        .hurricane-card {
+            background: linear-gradient(to bottom, #263238, #37474f);
+            overflow: hidden;
+        }
+
+        .hurricane-eye {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #b0bec5;
+            border-radius: 50%;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) inset;
+        }
+
+        .hurricane-band {
+            position: absolute;
+            border-radius: 50%;
+            border: 15px solid rgba(120, 144, 156, 0.7);
+            left: 50%;
+            top: 150px;
+            transform: translate(-50%, -50%);
+            animation: hurricaneRotate 5s linear infinite;
+            z-index: 2;
+        }
+
+        .hurricane-band-1 {
+            width: 100px;
+            height: 100px;
+        }
+
+        .hurricane-band-2 {
+            width: 150px;
+            height: 150px;
+            border-width: 12px;
+            animation-duration: 7s;
+        }
+
+        .hurricane-band-3 {
+            width: 200px;
+            height: 200px;
+            border-width: 10px;
+            animation-duration: 9s;
+        }
+
+        .hurricane-band-4 {
+            width: 250px;
+            height: 250px;
+            border-width: 8px;
+            animation-duration: 11s;
+        }
+
+        .hurricane-cloud {
+            position: absolute;
+            background-color: #455a64;
+            border-radius: 50%;
+            z-index: 1;
+            animation: hurricaneCloudMove 10s linear infinite;
+        }
+
+        .rain-streak {
+            position: absolute;
+            width: 1px;
+            height: 15px;
+            background-color: rgba(176, 190, 197, 0.7);
+            transform: rotate(45deg);
+            animation: hurricaneRain 1s linear infinite;
+            z-index: 1;
+        }
+
+        /* Animations */
+        @keyframes moveCloud {
+            0% {
+                left: -100px;
+            }
+            100% {
+                left: 300px;
+            }
+        }
+
+        @keyframes windLine {
+            0% {
+                left: -100px;
+            }
+            100% {
+                left: 300px;
+            }
+        }
+
+        @keyframes sway {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+        }
+
+        @keyframes rain {
+            0% {
+                top: 130px;
+                opacity: 1;
+            }
+            80% {
+                opacity: 0.5;
+            }
+            100% {
+                top: 250px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes puddle {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 50px #ffeb3b, 0 0 100px #ffeb3b;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+                box-shadow: 0 0 70px #ffeb3b, 0 0 120px #ffeb3b;
+            }
+        }
+
+        @keyframes heatWave {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes snowfall {
+            0% {
+                top: -10px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 280px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes lightning {
+            0%, 15%, 20%, 22.5%, 25%, 27.5%, 30%, 100% {
+                opacity: 0;
+                filter: blur(1px);
+            }
+            17.5%, 21.25%, 23.75%, 26.25%, 28.75% {
+                opacity: 1;
+                filter: blur(0);
+                box-shadow: 0 0 20px 5px rgba(255, 235, 59, 0.9);
+            }
+        }
+
+        @keyframes rotateTornado {
+            0% {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            100% {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+
+        @keyframes debrisFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) rotate(var(--r));
+                opacity: 0;
+            }
+        }
+
+        @keyframes fogMove {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: var(--base-opacity);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+                opacity: calc(var(--base-opacity) * 0.7);
+            }
+        }
+
+        @keyframes cloudFloat {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @keyframes fireRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 20px #ff9800;
+            }
+            50% {
+                opacity: 0.8;
+                box-shadow: 0 0 10px #ff9800;
+            }
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-200px) scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes waterRise {
+            0%, 100% {
+                height: 200px;
+            }
+            50% {
+                height: 220px;
+            }
+        }
+
+        @keyframes floodWave {
+            0%, 100% {
+                transform: translateX(-50%) scaleX(1);
+            }
+            50% {
+                transform: translateX(-50%) scaleX(1.1);
+            }
+        }
+
+        @keyframes floatObject {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-5px) rotate(-2deg);
+            }
+            75% {
+                transform: translateY(-5px) rotate(2deg);
+            }
+        }
+
+        @keyframes heavyRain {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(350px);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes tsunamiWave {
+            0%, 100% {
+                height: 150px;
+                bottom: 100px;
+            }
+            50% {
+                height: 180px;
+                bottom: 120px;
+            }
+        }
+
+        @keyframes waveHighlight {
+            0%, 100% {
+                opacity: 0.5;
+                top: 30px;
+            }
+            50% {
+                opacity: 0.7;
+                top: 40px;
+            }
+        }
+
+        @keyframes waveFoam {
+            0%, 100% {
+                opacity: 0.7;
+                top: -15px;
+            }
+            50% {
+                opacity: 0.9;
+                top: -5px;
+            }
+        }
+
+        @keyframes boatRock {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(10deg);
+            }
+            75% {
+                transform: rotate(-10deg);
+            }
+        }
+
+        @keyframes hurricaneRotate {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes hurricaneCloudMove {
+            0% {
+                transform: rotate(0deg) translateX(120px);
+            }
+            100% {
+                transform: rotate(360deg) translateX(120px);
+            }
+        }
+
+        @keyframes hurricaneRain {
+            0% {
+                transform: translateY(-10px) rotate(45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(20px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Acid Rain Card */
+        .acid-rain-card {
+            background: linear-gradient(to bottom, #4caf50, #2e7d32);
+            overflow: hidden;
+        }
+
+        .acid-cloud {
+            position: absolute;
+            width: 180px;
+            height: 60px;
+            background-color: #7cb342;
+            border-radius: 50px;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+
+        .acid-drop {
+            position: absolute;
+            background-color: rgba(205, 220, 57, 0.8);
+            width: 4px;
+            height: 15px;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            animation: acidRain 1.5s linear infinite;
+            z-index: 2;
+            box-shadow: 0 0 5px #cddc39;
+        }
+
+        .acid-ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #827717;
+            z-index: 1;
+            animation: acidBurn 8s ease-in-out infinite alternate;
+        }
+
+        .dead-tree {
+            position: absolute;
+            bottom: 60px;
+            z-index: 2;
+        }
+
+        .dead-tree-1 {
+            left: 60px;
+        }
+
+        .dead-tree-2 {
+            right: 60px;
+        }
+
+        .dead-tree:before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 70px;
+            background-color: #5D4037;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dead-tree:after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 50px;
+            background-color: rgba(121, 85, 72, 0.7);
+            border: 3px solid #3E2723;
+            border-bottom: none;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            clip-path: polygon(0% 100%, 20% 40%, 30% 70%, 40% 30%, 50% 60%, 60% 20%, 70% 50%, 80% 30%, 100% 100%);
+        }
+
+        /* Volcanic Eruption Card */
+        .volcano-card {
+            background: linear-gradient(to bottom, #3e2723, #bf360c);
+            overflow: hidden;
+        }
+
+        .volcano-cone {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 150px;
+            background-color: #5d4037;
+            clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+            z-index: 1;
+        }
+
+        .volcano-crater {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            background-color: #ff5722;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 0 20px #ff5722;
+            animation: craterGlow 2s ease-in-out infinite alternate;
+        }
+
+        .lava-particle {
+            position: absolute;
+            background-color: #ff9800;
+            border-radius: 50%;
+            z-index: 3;
+            animation: lavaEruption ease-out forwards;
+            box-shadow: 0 0 10px #ff5722;
+        }
+
+        .ash-cloud {
+            position: absolute;
+            background-color: rgba(120, 120, 120, 0.8);
+            border-radius: 50%;
+            z-index: 2;
+            animation: ashRise ease-out forwards;
+        }
+
+        .lava-flow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 80px;
+            background: linear-gradient(to bottom, #ff5722, #ff9800);
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+            z-index: 2;
+            animation: lavaFlow 4s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px #ff5722;
+        }
+
+        /* Enhanced Nuclear Radiation */
+        .radiation-card {
+            background: linear-gradient(to bottom, #2E7D32, #1B5E20);
+            overflow: hidden;
+        }
+
+        .mushroom-cloud {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .mushroom-stem {
+            position: absolute;
+            width: 40px;
+            height: 120px;
+            background-color: #FDD835;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.8);
+        }
+
+        .mushroom-top {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            background-color: #FFEB3B;
+            border-radius: 50% 50% 0 0;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            animation: cloudPulse 3s ease-in-out infinite alternate;
+            box-shadow: 0 0 30px rgba(255, 235, 59, 0.8);
+        }
+
+        .radiation-wave {
+            position: absolute;
+            border: 3px solid rgba(255, 255, 59, 0.7);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            animation: radiationWave 3s linear infinite;
+            opacity: 0;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.7);
+        }
+
+        .radiation-ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #AED581;
+            z-index: 1;
+            animation: groundPulse 4s ease-in-out infinite alternate;
+        }
+
+        .radiation-symbol {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+            background-color: #FFEB3B;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.8);
+            animation: symbolPulse 3s ease-in-out infinite alternate;
+            overflow: hidden;
+        }
+
+        .radiation-symbol::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: #2E7D32;
+            clip-path: circle(50%);
+        }
+
+        .radiation-symbol::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: #FFEB3B;
+            /* Three wider triangles at 120° intervals */
+            clip-path: polygon(
+                50% 50%,
+                65% 0%,
+                35% 0%,
+                50% 50%,
+                100% 65%,
+                85% 85%,
+                50% 50%,
+                15% 85%,
+                0% 65%,
+                50% 50%
+            );
+        }
+
+        .radiation-particle {
+            position: absolute;
+            background-color: rgba(255, 255, 0, 0.8);
+            border-radius: 50%;
+            z-index: 2;
+            animation: radiationParticle 4s linear infinite;
+            filter: blur(2px);
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.9);
+        }
+
+        @keyframes craterGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px #ff5722;
+                background-color: #ff5722;
+            }
+            50% {
+                box-shadow: 0 0 30px #ff9800;
+                background-color: #ff9800;
+            }
+        }
+
+        @keyframes lavaEruption {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ashRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-200px) scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes lavaFlow {
+            0%, 100% {
+                height: 80px;
+                box-shadow: 0 0 20px #ff5722;
+            }
+            50% {
+                height: 90px;
+                box-shadow: 0 0 30px #ff5722;
+            }
+        }
+
+        @keyframes acidRain {
+            0% {
+                top: 130px;
+                opacity: 1;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                top: 250px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes acidBurn {
+            0%, 100% {
+                background-color: #827717;
+            }
+            50% {
+                background-color: #9e9d24;
+            }
+        }
+
+        @keyframes radiationParticle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes groundPulse {
+            0%, 100% {
+                background-color: #AED581;
+            }
+            50% {
+                background-color: #C5E1A5;
+            }
+        }
+
+        @keyframes symbolPulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(255, 235, 59, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 235, 59, 1);
+            }
+        }
+
+        /* Meteor Storm Card */
+        .meteor-card {
+            background: linear-gradient(to bottom, #000000, #263238);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .night-sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            z-index: 1;
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+
+        /* Main meteor */
+        .main-meteor {
+            position: absolute;
+            top: 70px;
+            left: 70px;
+            z-index: 3;
+            animation: meteorTravel 6s linear infinite;
+        }
+
+        .meteor-core {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #ff9800);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            z-index: 4;
+        }
+
+        .meteor-streak {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+            transform-origin: left center;
+            transform: rotate(225deg);
+            filter: blur(1px);
+            z-index: 3;
+            border-radius: 2px;
+        }
+
+        .meteor-streak-2 {
+            width: 60px;
+            height: 3px;
+            transform: rotate(215deg);
+            opacity: 0.7;
+        }
+
+        .meteor-streak-3 {
+            width: 40px;
+            height: 2px;
+            transform: rotate(235deg);
+            opacity: 0.5;
+        }
+
+        .ground-meteor {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #4CAF50, #1B5E20);
+            border-radius: 50%;
+            bottom: 20px;
+            right: 50px;
+            z-index: 2;
+            box-shadow: 0 0 30px #ff9800;
+            overflow: hidden;
+        }
+
+        .ground-meteor::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            background-color: #1976D2;
+            border-radius: 50%;
+            top: 5px;
+            left: 10px;
+            transform: rotate(-20deg);
+        }
+
+        .ground-meteor::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 8px;
+            background-color: #1976D2;
+            border-radius: 50%;
+            bottom: 10px;
+            right: 5px;
+            transform: rotate(30deg);
+        }
+
+        .impact-glow {
+            position: absolute;
+            width: 80px;
+            height: 20px;
+            background-color: rgba(255, 152, 0, 0.5);
+            border-radius: 50%;
+            bottom: 10px;
+            right: 30px;
+            z-index: 1;
+            animation: impactPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes meteorTravel {
+            0% {
+                transform: translate(0, 0) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(120px, 120px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.2;
+                box-shadow: 0 0 2px white;
+            }
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 4px white, 0 0 8px white;
+            }
+        }
+
+        @keyframes impactPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        /* Plasma Storm Card */
+        .plasma-card {
+            background: linear-gradient(to bottom, #1a237e, #311b92);
+            overflow: hidden;
+        }
+
+        .plasma-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(103, 58, 183, 0.3), transparent);
+            animation: pulseBackground 4s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        .plasma-core {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle at center, #e1bee7, #9c27b0);
+            border-radius: 50%;
+            box-shadow: 0 0 40px #9c27b0, 0 0 80px #7b1fa2;
+            animation: plasmaCore 5s ease-in-out infinite alternate;
+            z-index: 3;
+        }
+
+        .plasma-particle {
+            position: absolute;
+            background: linear-gradient(to bottom right, #e040fb, #7c4dff);
+            border-radius: 50%;
+            filter: blur(1px);
+            z-index: 2;
+            animation: plasmaOrbit 8s linear infinite;
+        }
+
+        .plasma-lightning {
+            position: absolute;
+            background-color: rgba(224, 64, 251, 0.8);
+            z-index: 4;
+            transform-origin: center;
+            animation: lightningFlash 0.5s ease-out;
+            box-shadow: 0 0 10px #e040fb;
+            filter: blur(1px);
+        }
+
+        @keyframes plasmaCore {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 40px #9c27b0, 0 0 80px #7b1fa2;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                box-shadow: 0 0 60px #9c27b0, 0 0 100px #7b1fa2;
+            }
+        }
+
+        @keyframes plasmaOrbit {
+            0% {
+                transform: rotate(0deg) translateX(var(--orbit-radius)) rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg) translateX(var(--orbit-radius)) rotate(-360deg);
+            }
+        }
+
+        @keyframes lightningFlash {
+            0% {
+                opacity: 1;
+                transform: scaleY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes pulseBackground {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Time Distortion Card */
+        .time-distortion-card {
+            background: linear-gradient(to bottom, #004d40, #00695c);
+            overflow: hidden;
+        }
+
+        .time-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-radial-gradient(
+                circle at center,
+                rgba(0, 137, 123, 0.2) 0px,
+                rgba(0, 77, 64, 0.4) 20px,
+                rgba(0, 137, 123, 0.2) 40px
+            );
+            animation: timeBackgroundPulse 10s linear infinite;
+            z-index: 1;
+        }
+
+        .clock-face {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid rgba(178, 223, 219, 0.8);
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(178, 223, 219, 0.5);
+            animation: clockDistort 15s ease-in-out infinite alternate;
+        }
+
+        .clock-center {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #b2dfdb;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+        .clock-hand {
+            position: absolute;
+            background-color: #b2dfdb;
+            top: 50%;
+            left: 50%;
+            transform-origin: left center;
+            z-index: 4;
+            box-shadow: 0 0 5px rgba(178, 223, 219, 0.8);
+        }
+
+        .hour-hand {
+            width: 40px;
+            height: 4px;
+            animation: hourHandSpin 20s cubic-bezier(0.4, 2.8, 0.8, 0.2) infinite;
+        }
+
+        .minute-hand {
+            width: 50px;
+            height: 3px;
+            animation: minuteHandSpin 10s cubic-bezier(0.2, -1.2, 0.8, 2.2) infinite;
+        }
+
+        .second-hand {
+            width: 55px;
+            height: 2px;
+            animation: secondHandSpin 5s cubic-bezier(0.8, -0.5, 0.2, 1.5) infinite;
+        }
+
+        .time-ripple {
+            position: absolute;
+            border: 2px solid rgba(178, 223, 219, 0.6);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 3;
+            animation: timeRipple 4s ease-out forwards;
+        }
+
+        .time-fragment {
+            position: absolute;
+            background: linear-gradient(to bottom right, #80cbc4, #26a69a);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            z-index: 2;
+            animation: fragmentFloat 8s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes timeBackgroundPulse {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes clockDistort {
+            0%, 100% {
+                border-radius: 50%;
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            25% {
+                border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%;
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+            50% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: translate(-50%, -50%) rotate(180deg);
+            }
+            75% {
+                border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%;
+                transform: translate(-50%, -50%) rotate(270deg);
+            }
+        }
+
+        @keyframes hourHandSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(1080deg); }
+        }
+
+        @keyframes minuteHandSpin {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-540deg); }
+            100% { transform: rotate(540deg); }
+        }
+
+        @keyframes secondHandSpin {
+            0% { transform: rotate(0deg); }
+            33% { transform: rotate(300deg); }
+            66% { transform: rotate(-300deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes timeRipple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes fragmentFloat {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(var(--tx1), var(--ty1)) rotate(90deg);
+            }
+            50% {
+                transform: translate(var(--tx2), var(--ty2)) rotate(180deg);
+            }
+            75% {
+                transform: translate(var(--tx1), var(--ty2)) rotate(270deg);
+            }
+        }
+
+        /* Gravity Anomaly Card */
+        .gravity-card {
+            background: linear-gradient(to bottom, #3e2723, #5d4037);
+            overflow: hidden;
+        }
+
+        .gravity-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(121, 85, 72, 0.4), rgba(62, 39, 35, 0));
+            z-index: 1;
+            animation: gravityPulse 8s ease-in-out infinite alternate;
+        }
+
+        .gravity-field {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 2;
+            animation: fieldRotate 20s linear infinite;
+        }
+
+        .gravity-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at center, #212121, #000000);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(100, 70, 50, 0.5);
+            z-index: 4;
+            animation: blackHolePulse 5s ease-in-out infinite alternate;
+        }
+
+        .gravity-accretion-disk {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 20px;
+            background: linear-gradient(to right, rgba(255, 160, 0, 0.8), rgba(255, 87, 34, 0.8));
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(75deg);
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(255, 87, 34, 0.5);
+            animation: diskRotate 10s linear infinite;
+        }
+
+        .floating-object {
+            position: absolute;
+            background-color: #bcaaa4;
+            z-index: 3;
+            animation: objectFloat 10s ease-in-out infinite, objectWarp 5s ease-in-out infinite alternate;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .floating-rock {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .floating-cube {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+
+        .floating-triangle {
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        }
+
+        .floating-circle {
+            border-radius: 50%;
+        }
+
+        .floating-dust {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(215, 204, 200, 0.7);
+            border-radius: 50%;
+            z-index: 2;
+            animation: dustFloat 15s linear infinite;
+        }
+
+        @keyframes gravityPulse {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes fieldRotate {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+                box-shadow: 0 0 20px rgba(215, 204, 200, 0.2), inset 0 0 30px rgba(215, 204, 200, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(215, 204, 200, 0.3), inset 0 0 40px rgba(215, 204, 200, 0.2);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+                box-shadow: 0 0 20px rgba(215, 204, 200, 0.2), inset 0 0 30px rgba(215, 204, 200, 0.1);
+            }
+        }
+
+        @keyframes blackHolePulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(100, 70, 50, 0.5);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(100, 70, 50, 0.6);
+            }
+        }
+
+        @keyframes diskRotate {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes objectFloat {
+            0% {
+                transform: translate(var(--startX), var(--startY)) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translate(var(--x1), var(--y1)) rotate(90deg) scale(var(--scale1));
+            }
+            50% {
+                transform: translate(var(--x2), var(--y2)) rotate(180deg) scale(var(--scale2));
+            }
+            75% {
+                transform: translate(var(--x3), var(--y3)) rotate(270deg) scale(var(--scale1));
+            }
+            100% {
+                transform: translate(var(--startX), var(--startY)) rotate(360deg) scale(1);
+            }
+        }
+
+        @keyframes objectWarp {
+            0%, 100% {
+                border-radius: 0%;
+            }
+            25% {
+                border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%;
+            }
+            50% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            75% {
+                border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%;
+            }
+        }
+
+        @keyframes dustFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Psychedelic Rain Card */
+        .psychedelic-card {
+            background: linear-gradient(to bottom, #6a1b9a, #4a148c);
+            overflow: hidden;
+        }
+
+        .psychedelic-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(217deg, rgba(255,0,0,.5), rgba(255,0,0,0) 70.71%),
+                        linear-gradient(127deg, rgba(0,255,0,.5), rgba(0,255,0,0) 70.71%),
+                        linear-gradient(336deg, rgba(0,0,255,.5), rgba(0,0,255,0) 70.71%);
+            animation: colorShift 10s ease infinite;
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+        .psychedelic-drop {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 3;
+            animation: psychedelicDrop 4s linear forwards;
+            filter: blur(1px);
+        }
+
+        .rainbow-mist {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to top, 
+                rgba(255, 0, 0, 0.3),
+                rgba(255, 165, 0, 0.3),
+                rgba(255, 255, 0, 0.3),
+                rgba(0, 255, 0, 0.3),
+                rgba(0, 0, 255, 0.3),
+                rgba(75, 0, 130, 0.3),
+                rgba(238, 130, 238, 0.3),
+                transparent
+            );
+            z-index: 2;
+            animation: mistPulse 5s ease-in-out infinite;
+        }
+
+        .color-ripple {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            z-index: 2;
+            animation: colorRipple 4s ease-out forwards;
+        }
+
+        @keyframes colorShift {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+            50% {
+                filter: hue-rotate(180deg);
+            }
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        @keyframes psychedelicDrop {
+            0% {
+                transform: translateY(-50px) scale(1);
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(400px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes mistPulse {
+            0%, 100% {
+                height: 60px;
+                opacity: 0.5;
+            }
+            50% {
+                height: 80px;
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes colorRipple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                border-color: var(--ripple-color);
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+                border-color: var(--ripple-color);
+            }
+        }
+
+        /* Quantum Flux Card */
+        .quantum-card {
+            background: linear-gradient(to bottom, #0d47a1, #1565c0);
+            overflow: hidden;
+        }
+
+        .quantum-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(41, 182, 246, 0.2), transparent 70%);
+            animation: quantumPulse 8s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        .quantum-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(100, 181, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(100, 181, 246, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 2;
+            animation: gridFluctuate 10s linear infinite;
+        }
+
+        .quantum-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, #e3f2fd, #90caf9);
+            box-shadow: 0 0 8px #29b6f6;
+            z-index: 3;
+            animation: quantumParticle 6s ease-in-out infinite;
+        }
+
+        .probability-wave {
+            position: absolute;
+            bottom: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #29b6f6, transparent);
+            z-index: 2;
+            animation: probabilityWave 5s ease-in-out infinite;
+        }
+
+        @keyframes quantumPulse {
+            0%, 100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes gridFluctuate {
+            0% {
+                opacity: 0.3;
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.2) rotate(0.5deg);
+            }
+            75% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0.3;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes quantumParticle {
+            0% {
+                opacity: 0;
+                transform: translate(var(--startX), var(--startY)) scale(0.2);
+            }
+            10% {
+                opacity: 1;
+            }
+            40% {
+                transform: translate(var(--midX), var(--midY)) scale(1.5);
+            }
+            60% {
+                transform: translate(var(--endX), var(--endY)) scale(0.8);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--startX), var(--startY)) scale(0.2);
+            }
+        }
+
+        @keyframes probabilityWave {
+            0%, 100% {
+                height: 2px;
+                transform: translateY(0);
+            }
+            50% {
+                height: 100px;
+                transform: translateY(-50px);
+            }
+        }
+
+        /* Fractal Storm Card */
+        .fractal-card {
+            background: linear-gradient(to bottom, #4a148c, #6a1b9a);
+            overflow: hidden;
+        }
+
+        .fractal-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(186, 104, 200, 0.3), transparent);
+            z-index: 1;
+        }
+
+        .fractal {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.7);
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            z-index: 2;
+            animation: fractalSpin 10s linear infinite;
+            transform-origin: center;
+        }
+
+        .fractal-lightning {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            transform-origin: top;
+            z-index: 3;
+            animation: fractalLightning 0.5s ease-out;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes fractalSpin {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        @keyframes fractalLightning {
+            0% {
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                height: var(--lightning-height);
+                opacity: 0;
+            }
+        }
+
+        /* Void Collapse Card */
+        .void-card {
+            background: linear-gradient(to bottom, #000000, #212121);
+            overflow: hidden;
+        }
+
+        .void-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(66, 66, 66, 0.5), transparent);
+            z-index: 1;
+            animation: voidPulse 8s ease-in-out infinite;
+        }
+
+        .void-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at center, #424242, #000000);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            z-index: 4;
+            animation: voidCenter 10s ease-in-out infinite;
+        }
+
+        .void-particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            z-index: 3;
+            animation: voidParticle 4s ease-in-out forwards;
+        }
+
+        .void-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            animation: voidRing 8s ease-out forwards;
+        }
+
+        @keyframes voidPulse {
+            0%, 100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes voidCenter {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+            }
+        }
+
+        @keyframes voidParticle {
+            0% {
+                transform: translate(var(--startX), var(--startY)) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 0) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes voidRing {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: var(--ring-size);
+                height: var(--ring-size);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced Hyperdimensional Shift Card */
+        .hyperdimensional-card {
+            background: linear-gradient(to bottom, #00695c, #004d40);
+            overflow: hidden;
+        }
+
+        .hyperdimensional-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 137, 123, 0.3), transparent);
+            z-index: 1;
+            animation: dimensionShift 15s linear infinite;
+        }
+
+        .dimension-plane {
+            position: absolute;
+            background: linear-gradient(45deg, rgba(0, 188, 212, 0.2), rgba(0, 150, 136, 0.2), rgba(76, 175, 80, 0.2));
+            transform-style: preserve-3d;
+            z-index: 2;
+            animation: planeDrift 15s ease-in-out infinite;
+            border: 1px solid rgba(178, 223, 219, 0.3);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+        }
+
+        .dimension-object {
+            position: absolute;
+            z-index: 3;
+            animation: objectShift 10s ease-in-out infinite;
+        }
+
+        .cube {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00bcd4, #009688, #4caf50);
+            transform-style: preserve-3d;
+            transform: rotateX(45deg) rotateY(45deg);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+            animation: cubeColorShift 8s linear infinite;
+        }
+
+        .tesseract {
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(178, 223, 219, 0.8);
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateY(60deg);
+            box-shadow: 0 0 15px rgba(178, 223, 219, 0.5);
+            position: relative;
+            animation: tesseractPulse 5s ease-in-out infinite;
+        }
+
+        .tesseract::before, .tesseract::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(178, 223, 219, 0.4);
+            animation: tesseractRotate 10s linear infinite;
+        }
+
+        .tesseract::before {
+            transform: scale(0.7) translateZ(-10px);
+            border-color: rgba(0, 188, 212, 0.6);
+        }
+
+        .tesseract::after {
+            transform: scale(1.3) translateZ(10px);
+            border-color: rgba(76, 175, 80, 0.6);
+        }
+
+        .dimension-trail {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(178, 223, 219, 0.7);
+            border-radius: 50%;
+            z-index: 2;
+            animation: trailFade 2s linear forwards;
+        }
+
+        @keyframes dimensionShift {
+            0% {
+                background: radial-gradient(circle at center, rgba(0, 137, 123, 0.3), transparent);
+                filter: hue-rotate(0deg);
+            }
+            33% {
+                background: radial-gradient(circle at center, rgba(0, 188, 212, 0.3), transparent);
+                filter: hue-rotate(120deg);
+            }
+            66% {
+                background: radial-gradient(circle at center, rgba(76, 175, 80, 0.3), transparent);
+                filter: hue-rotate(240deg);
+            }
+            100% {
+                background: radial-gradient(circle at center, rgba(0, 137, 123, 0.3), transparent);
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        @keyframes planeDrift {
+            0%, 100% {
+                transform: translate(var(--startX), var(--startY)) rotateX(var(--rotX1)) rotateY(var(--rotY1));
+                opacity: 0.2;
+                border-color: rgba(0, 188, 212, 0.3);
+            }
+            33% {
+                border-color: rgba(76, 175, 80, 0.3);
+            }
+            50% {
+                transform: translate(var(--endX), var(--endY)) rotateX(var(--rotX2)) rotateY(var(--rotY2));
+                opacity: 0.6;
+                border-color: rgba(0, 150, 136, 0.3);
+            }
+            66% {
+                border-color: rgba(0, 188, 212, 0.3);
+            }
+        }
+
+        @keyframes objectShift {
+            0%, 100% {
+                transform: translate(var(--startX), var(--startY)) rotateX(45deg) rotateY(45deg) scale(1);
+            }
+            25% {
+                transform: translate(var(--midX1), var(--midY1)) rotateX(90deg) rotateY(90deg) scale(1.2);
+            }
+            50% {
+                transform: translate(var(--midX2), var(--midY2)) rotateX(180deg) rotateY(180deg) scale(0.8);
+            }
+            75% {
+                transform: translate(var(--midX3), var(--midY3)) rotateX(270deg) rotateY(270deg) scale(1.2);
+            }
+        }
+
+        @keyframes cubeColorShift {
+            0%, 100% {
+                background: linear-gradient(135deg, #00bcd4, #009688, #4caf50);
+                box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+            }
+            33% {
+                background: linear-gradient(135deg, #4caf50, #00bcd4, #009688);
+                box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+            }
+            66% {
+                background: linear-gradient(135deg, #009688, #4caf50, #00bcd4);
+                box-shadow: 0 0 15px rgba(0, 150, 136, 0.5);
+            }
+        }
+
+        @keyframes tesseractPulse {
+            0%, 100% {
+                border-color: rgba(178, 223, 219, 0.8);
+                box-shadow: 0 0 15px rgba(178, 223, 219, 0.5);
+            }
+            33% {
+                border-color: rgba(0, 188, 212, 0.8);
+                box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+            }
+            66% {
+                border-color: rgba(76, 175, 80, 0.8);
+                box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+            }
+        }
+
+        @keyframes tesseractRotate {
+            0% {
+                transform: scale(0.7) rotateX(0deg) rotateY(0deg) translateZ(-10px);
+            }
+            100% {
+                transform: scale(0.7) rotateX(360deg) rotateY(360deg) translateZ(-10px);
+            }
+        }
+
+        @keyframes trailFade {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Weather Cards</h1>
+    
+    <div class="container">
+        <!-- Wind Card -->
+        <div class="weather-card wind-card">
+            <div class="card-title">Wind</div>
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+            <div class="wind-line wind-line-1"></div>
+            <div class="wind-line wind-line-2"></div>
+            <div class="wind-line wind-line-3"></div>
+            <div class="tree">
+                <div class="leaves"></div>
+                <div class="trunk"></div>
+            </div>
+        </div>
+
+        <!-- Rain Card -->
+        <div class="weather-card rain-card">
+            <div class="card-title">Rain</div>
+            <div class="rain-cloud"></div>
+            <div id="raindrops-container"></div>
+            <div class="puddle"></div>
+        </div>
+
+        <!-- Sun Card -->
+        <div class="weather-card sun-card">
+            <div class="card-title">Sun</div>
+            <div class="sun"></div>
+            <div id="sun-rays-container"></div>
+            <div class="ground"></div>
+            <div class="heat-wave" style="bottom: 90px;"></div>
+            <div class="heat-wave" style="bottom: 110px; animation-delay: 0.5s;"></div>
+            <div class="heat-wave" style="bottom: 130px; animation-delay: 1s;"></div>
+        </div>
+
+        <!-- Snow Card -->
+        <div class="weather-card snow-card">
+            <div class="card-title">Snow</div>
+            <div id="snowflakes-container"></div>
+            <div class="snow-ground"></div>
+            <div class="snow-pile snow-pile-1"></div>
+            <div class="snow-pile snow-pile-2"></div>
+        </div>
+
+
+        <!-- Thunderstorm Card -->
+        <div class="weather-card thunderstorm-card">
+            <div class="card-title">Thunderstorm</div>
+            <div class="thunder-cloud thunder-cloud-1"></div>
+            <div class="thunder-cloud thunder-cloud-2"></div>
+            <div class="lightning"></div>
+            <div id="thunder-raindrops-container"></div>
+        </div>
+
+        <!-- Tornado Card -->
+        <div class="weather-card tornado-card">
+            <div class="card-title">Tornado</div>
+            <div class="tornado-funnel tornado-section-1"></div>
+            <div class="tornado-funnel tornado-section-2"></div>
+            <div class="tornado-funnel tornado-section-3"></div>
+            <div class="tornado-funnel tornado-section-4"></div>
+            <div class="tornado-funnel tornado-section-5"></div>
+            <div id="debris-container"></div>
+        </div>
+
+        <!-- Foggy Card -->
+        <div class="weather-card foggy-card">
+            <div class="card-title">Foggy</div>
+            <div class="fog-layer fog-layer-1" style="--base-opacity: 0.7;"></div>
+            <div class="fog-layer fog-layer-2" style="--base-opacity: 0.6;"></div>
+            <div class="fog-layer fog-layer-3" style="--base-opacity: 0.5;"></div>
+            <div class="fog-layer fog-layer-4" style="--base-opacity: 0.7;"></div>
+            <div class="fog-layer fog-layer-5" style="--base-opacity: 0.4;"></div>
+            <div class="tree-silhouette tree-silhouette-1">
+                <div class="leaves" style="background-color: #263238;"></div>
+                <div class="trunk" style="background-color: #3e2723;"></div>
+            </div>
+            <div class="tree-silhouette tree-silhouette-2">
+                <div class="leaves" style="background-color: #263238;"></div>
+                <div class="trunk" style="background-color: #3e2723;"></div>
+            </div>
+        </div>
+
+        <!-- Cloudy Card -->
+        <div class="weather-card cloudy-card">
+            <div class="card-title">Cloudy</div>
+            <div class="sun-peek"></div>
+            <div class="big-cloud big-cloud-1"></div>
+            <div class="big-cloud big-cloud-2"></div>
+            <div class="big-cloud big-cloud-3"></div>
+        </div>
+
+        <!-- Third row - new extreme weather cards -->
+        <!-- Wildfire Card -->
+        <div class="weather-card wildfire-card">
+            <div class="card-title">Wildfire</div>
+            <div class="fire-ground"></div>
+            <div id="fire-particles-container"></div>
+            <div id="smoke-container"></div>
+            <div class="tree-burning tree-burning-1">
+                <div class="tree-fire"></div>
+                <div class="tree-trunk-burning"></div>
+            </div>
+            <div class="tree-burning tree-burning-2">
+                <div class="tree-fire"></div>
+                <div class="tree-trunk-burning"></div>
+            </div>
+        </div>
+
+        <!-- Flood Card -->
+        <div class="weather-card flood-card">
+            <div class="card-title">Flood</div>
+            <div class="flood-water"></div>
+            <div class="flood-wave" style="bottom: 180px;"></div>
+            <div class="flood-wave" style="bottom: 160px; animation-delay: 1s;"></div>
+            <div class="flood-wave" style="bottom: 140px; animation-delay: 2s;"></div>
+            <div class="house house-1">
+                <div class="house-roof"></div>
+                <div class="house-base"></div>
+            </div>
+            <div class="house house-2">
+                <div class="house-roof"></div>
+                <div class="house-base"></div>
+            </div>
+            <div id="rain-particles-container"></div>
+        </div>
+
+        <!-- Tsunami Card -->
+        <div class="weather-card tsunami-card">
+            <div class="card-title">Tsunami</div>
+            <div class="ocean"></div>
+            <div class="tsunami-wave">
+                <div class="wave-highlight"></div>
+                <div class="wave-foam"></div>
+            </div>
+            <div class="boat boat-1"></div>
+            <div class="boat boat-2"></div>
+        </div>
+
+        <!-- Hurricane Card -->
+        <div class="weather-card hurricane-card">
+            <div class="card-title">Hurricane</div>
+            <div class="hurricane-eye"></div>
+            <div class="hurricane-band hurricane-band-1"></div>
+            <div class="hurricane-band hurricane-band-2"></div>
+            <div class="hurricane-band hurricane-band-3"></div>
+            <div class="hurricane-band hurricane-band-4"></div>
+            <div id="hurricane-clouds-container"></div>
+            <div id="hurricane-rain-container"></div>
+        </div>
+
+        <!-- Fourth row - extreme phenomena -->
+        <!-- Volcanic Eruption Card -->
+        <div class="weather-card volcano-card">
+            <div class="card-title">Volcanic Eruption</div>
+            <div class="volcano-cone"></div>
+            <div class="volcano-crater"></div>
+            <div id="lava-particles-container"></div>
+            <div id="ash-cloud-container"></div>
+            <div class="lava-flow"></div>
+        </div>
+
+        <!-- Meteor Storm Card -->
+        <div class="weather-card meteor-card">
+            <div class="card-title">Meteor Storm</div>
+            <div class="night-sky"></div>
+            <div id="stars-container"></div>
+            <div class="main-meteor">
+                <div class="meteor-core"></div>
+                <div class="meteor-streak"></div>
+                <div class="meteor-streak meteor-streak-2"></div>
+                <div class="meteor-streak meteor-streak-3"></div>
+            </div>
+            <div class="ground-meteor"></div>
+            <div class="impact-glow"></div>
+        </div>
+
+        <!-- Acid Rain Card -->
+        <div class="weather-card acid-rain-card">
+            <div class="card-title">Acid Rain</div>
+            <div class="acid-cloud"></div>
+            <div id="acid-drops-container"></div>
+            <div class="acid-ground"></div>
+            <div class="dead-tree dead-tree-1"></div>
+            <div class="dead-tree dead-tree-2"></div>
+        </div>
+
+        <!-- Nuclear Radiation Card -->
+        <div class="weather-card radiation-card">
+            <div class="card-title">Nuclear Radiation</div>
+            <div class="mushroom-cloud">
+                <div class="mushroom-stem"></div>
+                <div class="mushroom-top"></div>
+            </div>
+            <div id="radiation-waves-container"></div>
+            <div class="radiation-ground"></div>
+            <div class="radiation-symbol"></div>
+        </div>
+
+        <!-- Add this after the last container div, before the closing body tag -->
+        <!-- Plasma Storm Card -->
+        <div class="weather-card plasma-card">
+            <div class="card-title">Plasma Storm</div>
+            <div class="plasma-background"></div>
+            <div id="plasma-particles-container"></div>
+            <div class="plasma-core"></div>
+            <div id="lightning-container"></div>
+        </div>
+
+        <!-- Time Distortion Card -->
+        <div class="weather-card time-distortion-card">
+            <div class="card-title">Time Distortion</div>
+            <div class="time-background"></div>
+            <div class="clock-face">
+                <div class="clock-center"></div>
+                <div class="clock-hand hour-hand"></div>
+                <div class="clock-hand minute-hand"></div>
+                <div class="clock-hand second-hand"></div>
+            </div>
+            <div id="time-ripples-container"></div>
+            <div id="time-fragments-container"></div>
+        </div>
+
+        <!-- Gravity Anomaly Card -->
+        <div class="weather-card gravity-card">
+            <div class="card-title">Gravity Anomaly</div>
+            <div class="gravity-background"></div>
+            <div class="gravity-field"></div>
+            <div class="gravity-accretion-disk"></div>
+            <div id="floating-objects-container"></div>
+            <div class="gravity-core"></div>
+        </div>
+
+        <!-- Add this to the container div after the Gravity Anomaly card -->
+        <!-- Psychedelic Rain Card -->
+        <div class="weather-card psychedelic-card">
+            <div class="card-title">Psychedelic Rain</div>
+            <div class="psychedelic-background"></div>
+            <div id="psychedelic-drops-container"></div>
+            <div class="rainbow-mist"></div>
+            <div class="color-ripples-container"></div>
+        </div>
+
+        <!-- Add this after the last container div -->
+        <!-- Quantum Flux Card -->
+        <div class="weather-card quantum-card">
+            <div class="card-title">Quantum Flux</div>
+            <div class="quantum-background"></div>
+            <div id="quantum-particles-container"></div>
+            <div class="quantum-grid"></div>
+            <div class="probability-wave"></div>
+        </div>
+
+        <!-- Fractal Storm Card -->
+        <div class="weather-card fractal-card">
+            <div class="card-title">Fractal Storm</div>
+            <div class="fractal-background"></div>
+            <div id="fractal-container"></div>
+            <div class="fractal-lightning"></div>
+        </div>
+
+        <!-- Void Collapse Card -->
+        <div class="weather-card void-card">
+            <div class="card-title">Void Collapse</div>
+            <div class="void-background"></div>
+            <div class="void-center"></div>
+            <div id="void-particles-container"></div>
+            <div id="void-rings-container"></div>
+        </div>
+
+        <!-- Enhanced Hyperdimensional Shift Card -->
+        <div class="weather-card hyperdimensional-card">
+            <div class="card-title">Hyperdimensional Shift</div>
+            <div class="hyperdimensional-background"></div>
+            <div id="dimension-planes-container"></div>
+            <div id="dimension-objects-container"></div>
+        </div>
+    </div>
+
+
+    <script>
+        // Create raindrops
+        function createRaindrops() {
+            const container = document.getElementById('raindrops-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 20; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                
+                // Random position
+                const left = Math.random() * (cardWidth - 20) + 10;
+                const delay = Math.random() * 1.5;
+                
+                raindrop.style.left = `${left}px`;
+                raindrop.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(raindrop);
+            }
+        }
+
+        // Create sun rays
+        function createSunRays() {
+            const container = document.getElementById('sun-rays-container');
+            const centerX = 125; // Half of card width
+            const centerY = 100; // Sun position
+            
+            for (let i = 0; i < 12; i++) {
+                const ray = document.createElement('div');
+                ray.className = 'sun-ray';
+                
+                const angle = (i * 30) * (Math.PI / 180);
+                const length = 100;
+                const width = 3;
+                
+                ray.style.width = `${width}px`;
+                ray.style.height = `${length}px`;
+                ray.style.transformOrigin = 'center bottom';
+                ray.style.transform = `translate(${centerX}px, ${centerY}px) rotate(${angle}rad) translateY(-${length / 2}px)`;
+                ray.style.animation = `pulse 3s ease-in-out infinite`;
+                ray.style.animationDelay = `${i * 0.1}s`;
+                
+                container.appendChild(ray);
+            }
+        }
+
+        // Create snowflakes
+        function createSnowflakes() {
+            const container = document.getElementById('snowflakes-container');
+            const cardWidth = 250;
+            const snowflakeChars = ['❄', '❅', '❆', '✻', '✼', '❉'];
+            
+            for (let i = 0; i < 30; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                
+                // Random position, size, and character
+                const left = Math.random() * cardWidth;
+                const size = Math.random() * 10 + 10;
+                const duration = Math.random() * 5 + 5;
+                const delay = Math.random() * 5;
+                const char = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+                
+                snowflake.textContent = char;
+                snowflake.style.left = `${left}px`;
+                snowflake.style.fontSize = `${size}px`;
+                snowflake.style.animationDuration = `${duration}s`;
+                snowflake.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(snowflake);
+            }
+        }
+
+        // Create thunder raindrops
+        function createThunderRaindrops() {
+            const container = document.getElementById('thunder-raindrops-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 30; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'thunder-raindrop';
+                
+                // Random position
+                const left = Math.random() * (cardWidth - 20) + 10;
+                const delay = Math.random() * 1.5;
+                
+                raindrop.style.left = `${left}px`;
+                raindrop.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(raindrop);
+            }
+        }
+
+        // Create debris for tornado
+        function createDebris() {
+            const container = document.getElementById('debris-container');
+            const cardWidth = 250;
+            const cardHeight = 350;
+            
+            for (let i = 0; i < 20; i++) {
+                const debris = document.createElement('div');
+                debris.className = 'debris';
+                
+                // Random size, position, and movement
+                const size = Math.random() * 5 + 2;
+                const startX = Math.random() * cardWidth;
+                const startY = Math.random() * (cardHeight - 100) + 150;
+                const tx = (Math.random() - 0.5) * 200;
+                const ty = (Math.random() - 0.5) * 100;
+                const rotation = Math.random() * 720 - 360;
+                const delay = Math.random() * 5;
+                
+                debris.style.width = `${size}px`;
+                debris.style.height = `${size}px`;
+                debris.style.left = `${startX}px`;
+                debris.style.top = `${startY}px`;
+                debris.style.setProperty('--tx', `${tx}px`);
+                debris.style.setProperty('--ty', `${ty}px`);
+                debris.style.setProperty('--r', `${rotation}deg`);
+                debris.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(debris);
+            }
+        }
+
+        // Create fire particles
+        function createFireParticles() {
+            const container = document.getElementById('fire-particles-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'fire-particle';
+                
+                // Random size, position, and duration
+                const size = Math.random() * 8 + 2;
+                const left = Math.random() * cardWidth;
+                const duration = Math.random() * 2 + 1;
+                const delay = Math.random() * 2;
+                const color = Math.random() > 0.5 ? '#ffeb3b' : '#ff9800';
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}px`;
+                particle.style.bottom = `${100 + Math.random() * 20}px`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 ${size}px ${color}`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Create smoke particles
+        function createSmokeParticles() {
+            const container = document.getElementById('smoke-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 15; i++) {
+                const smoke = document.createElement('div');
+                smoke.className = 'smoke';
+                
+                // Random size, position, and duration
+                const size = Math.random() * 30 + 20;
+                const left = Math.random() * (cardWidth - 40) + 20;
+                const duration = Math.random() * 3 + 3;
+                const delay = Math.random() * 5;
+                const opacity = Math.random() * 0.3 + 0.4;
+                
+                smoke.style.width = `${size}px`;
+                smoke.style.height = `${size}px`;
+                smoke.style.left = `${left}px`;
+                smoke.style.bottom = `${150 + Math.random() * 50}px`;
+                smoke.style.animationDuration = `${duration}s`;
+                smoke.style.animationDelay = `${delay}s`;
+                smoke.style.opacity = opacity;
+                
+                container.appendChild(smoke);
+            }
+        }
+
+        // Create rain particles for flood
+        function createRainParticles() {
+            const container = document.getElementById('rain-particles-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 100; i++) {
+                const rain = document.createElement('div');
+                rain.className = 'rain-particle';
+                
+                // Random position and delay
+                const left = Math.random() * cardWidth;
+                const delay = Math.random();
+                
+                rain.style.left = `${left}px`;
+                rain.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(rain);
+            }
+        }
+
+        // Create hurricane clouds
+        function createHurricaneClouds() {
+            const container = document.getElementById('hurricane-clouds-container');
+            const centerX = 125; // Half of card width
+            const centerY = 150; // Hurricane center
+            
+            for (let i = 0; i < 8; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'hurricane-cloud';
+                
+                // Random size and position around the center
+                const size = Math.random() * 40 + 30;
+                const angle = (i * 45) * (Math.PI / 180);
+                const radius = Math.random() * 20 + 100;
+                const delay = i * 0.5;
+                
+                cloud.style.width = `${size}px`;
+                cloud.style.height = `${size * 0.6}px`;
+                cloud.style.top = `${centerY}px`;
+                cloud.style.left = `${centerX}px`;
+                cloud.style.transformOrigin = `0 0`;
+                cloud.style.animation = `hurricaneCloudMove ${10 + i}s linear infinite`;
+                cloud.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(cloud);
+            }
+        }
+
+        // Create hurricane rain streaks
+        function createHurricaneRain() {
+            const container = document.getElementById('hurricane-rain-container');
+            const cardWidth = 250;
+            const cardHeight = 350;
+            
+            for (let i = 0; i < 100; i++) {
+                const rain = document.createElement('div');
+                rain.className = 'rain-streak';
+                
+                // Random position and delay
+                const left = Math.random() * cardWidth;
+                const top = Math.random() * cardHeight;
+                const delay = Math.random();
+                
+                rain.style.left = `${left}px`;
+                rain.style.top = `${top}px`;
+                rain.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(rain);
+            }
+        }
+
+        // Create lava particles
+        function createLavaParticles() {
+            const container = document.getElementById('lava-particles-container');
+            const centerX = 125; // Half of card width
+            
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'lava-particle';
+                
+                // Random size, position, and duration
+                const size = Math.random() * 10 + 5;
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 150 + 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = -Math.sin(angle) * distance - 100;
+                const duration = Math.random() * 2 + 1;
+                const delay = Math.random() * 3;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${centerX}px`;
+                particle.style.bottom = `${100 + Math.random() * 10}px`;
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Create ash clouds
+        function createAshClouds() {
+            const container = document.getElementById('ash-cloud-container');
+            const centerX = 125; // Half of card width
+            
+            for (let i = 0; i < 10; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'ash-cloud';
+                
+                // Random size, position, and duration
+                const size = Math.random() * 40 + 30;
+                const offsetX = (Math.random() - 0.5) * 40;
+                const duration = Math.random() * 4 + 6;
+                const delay = Math.random() * 5;
+                
+                cloud.style.width = `${size}px`;
+                cloud.style.height = `${size * 0.6}px`;
+                cloud.style.left = `${centerX + offsetX}px`;
+                cloud.style.bottom = `${120 + Math.random() * 20}px`;
+                cloud.style.animationDuration = `${duration}s`;
+                cloud.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(cloud);
+            }
+        }
+
+        // Create stars
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const cardWidth = 250;
+            const cardHeight = 350;
+            
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random size and position
+                const size = Math.random() * 2 + 1;
+                const left = Math.random() * cardWidth;
+                const top = Math.random() * (cardHeight - 100);
+                const delay = Math.random() * 3;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${left}px`;
+                star.style.top = `${top}px`;
+                star.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(star);
+            }
+        }
+
+        // Create acid raindrops
+        function createAcidDrops() {
+            const container = document.getElementById('acid-drops-container');
+            const cardWidth = 250;
+            
+            for (let i = 0; i < 30; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'acid-drop';
+                
+                // Random position and delay
+                const left = Math.random() * (cardWidth - 20) + 10;
+                const delay = Math.random() * 1.5;
+                
+                drop.style.left = `${left}px`;
+                drop.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(drop);
+            }
+        }
+
+        // Create radiation waves
+        function createRadiationWaves() {
+            const container = document.getElementById('radiation-waves-container');
+            
+            for (let i = 0; i < 5; i++) {
+                const wave = document.createElement('div');
+                wave.className = 'radiation-wave';
+                
+                wave.style.animationDelay = `${i * 0.6}s`;
+                
+                container.appendChild(wave);
+            }
+        }
+
+        // Create radiation particles with larger radius
+        function createRadiationParticles() {
+            const container = document.getElementById('radiation-waves-container');
+            const centerX = 125; // Half of card width
+            const centerY = 150; // Center of card
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'radiation-particle';
+                
+                // Random size, position, and duration
+                const size = Math.random() * 10 + 5; // Larger particles
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 150 + 50; // Larger radius
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                const duration = Math.random() * 3 + 2; // Longer duration
+                const delay = Math.random() * 3;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${centerX}px`;
+                particle.style.top = `${centerY}px`;
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize all animations
+        window.onload = function() {
+            // Original weather animations
+            createRaindrops();
+            createSunRays();
+            createSnowflakes();
+            createThunderRaindrops();
+            createDebris();
+            
+            // Extreme weather animations
+            createFireParticles();
+            createSmokeParticles();
+            createRainParticles();
+            createHurricaneClouds();
+            createHurricaneRain();
+            
+            // Extreme phenomena animations
+            createLavaParticles();
+            createAshClouds();
+            createStars();
+            createAcidDrops();
+            createRadiationWaves();
+            createRadiationParticles();
+            
+            // Alien/abstract phenomena
+            createPlasmaParticles();
+            createPlasmaLightning();
+            createTimeRipples();
+            createTimeFragments();
+            createFloatingObjects();
+            createPsychedelicDrops();
+            
+            // New abstract phenomena
+            createQuantumParticles();
+            createFractals();
+            createVoidEffects();
+            createHyperdimensionalEffects();
+        };
+
+        // Add these functions to the script section
+
+        // Create plasma particles
+        function createPlasmaParticles() {
+            const container = document.getElementById('plasma-particles-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'plasma-particle';
+                
+                // Random size, orbit radius and speed
+                const size = Math.random() * 15 + 5;
+                const orbitRadius = Math.random() * 80 + 50;
+                const duration = Math.random() * 8 + 4;
+                const delay = Math.random() * 4;
+                const startAngle = Math.random() * 360;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${centerX}px`;
+                particle.style.top = `${centerY}px`;
+                particle.style.setProperty('--orbit-radius', `${orbitRadius}px`);
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.transform = `rotate(${startAngle}deg) translateX(${orbitRadius}px) rotate(-${startAngle}deg)`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Create plasma lightning
+        function createPlasmaLightning() {
+            const container = document.getElementById('lightning-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            
+            setInterval(() => {
+                const lightning = document.createElement('div');
+                lightning.className = 'plasma-lightning';
+                
+                // Random angle, length and width
+                const angle = Math.random() * 360;
+                const length = Math.random() * 100 + 50;
+                const width = Math.random() * 3 + 1;
+                
+                lightning.style.width = `${width}px`;
+                lightning.style.height = `${length}px`;
+                lightning.style.left = `${centerX}px`;
+                lightning.style.top = `${centerY}px`;
+                lightning.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scaleY(0)`;
+                
+                container.appendChild(lightning);
+                
+                // Remove the lightning after animation completes
+                setTimeout(() => {
+                    container.removeChild(lightning);
+                }, 500);
+            }, 800);
+        }
+
+        // Create time ripples
+        function createTimeRipples() {
+            const container = document.getElementById('time-ripples-container');
+            
+            setInterval(() => {
+                const ripple = document.createElement('div');
+                ripple.className = 'time-ripple';
+                
+                container.appendChild(ripple);
+                
+                // Remove the ripple after animation completes
+                setTimeout(() => {
+                    container.removeChild(ripple);
+                }, 4000);
+            }, 2000);
+        }
+
+        // Create time fragments
+        function createTimeFragments() {
+            const container = document.getElementById('time-fragments-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            
+            for (let i = 0; i < 12; i++) {
+                const fragment = document.createElement('div');
+                fragment.className = 'time-fragment';
+                
+                // Random size, position, and movement
+                const size = Math.random() * 15 + 10;
+                const angle = (i * 30) * (Math.PI / 180);
+                const distance = Math.random() * 30 + 70;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                
+                // Random movement variables
+                const tx1 = Math.random() * 40 - 20;
+                const ty1 = Math.random() * 40 - 20;
+                const tx2 = Math.random() * 40 - 20;
+                const ty2 = Math.random() * 40 - 20;
+                
+                fragment.style.width = `${size}px`;
+                fragment.style.height = `${size}px`;
+                fragment.style.left = `${centerX + x}px`;
+                fragment.style.top = `${centerY + y}px`;
+                fragment.style.setProperty('--tx1', `${tx1}px`);
+                fragment.style.setProperty('--ty1', `${ty1}px`);
+                fragment.style.setProperty('--tx2', `${tx2}px`);
+                fragment.style.setProperty('--ty2', `${ty2}px`);
+                fragment.style.animationDelay = `${i * 0.5}s`;
+                
+                container.appendChild(fragment);
+            }
+        }
+
+        // Create floating objects
+        function createFloatingObjects() {
+            const container = document.getElementById('floating-objects-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            const shapes = ['floating-rock', 'floating-cube', 'floating-triangle', 'floating-circle'];
+            
+            for (let i = 0; i < 15; i++) {
+                const object = document.createElement('div');
+                object.className = `floating-object ${shapes[i % shapes.length]}`;
+                
+                // Random size and orbital parameters
+                const size = Math.random() * 20 + 10;
+                const angle = (i / 15) * Math.PI * 2; // Distribute objects evenly around the circle
+                const distance = Math.random() * 70 + 30;
+                
+                // Calculate positions along the orbital path
+                const startX = centerX + Math.cos(angle) * distance;
+                const startY = centerY + Math.sin(angle) * distance;
+                const x1 = centerX + Math.cos(angle + Math.PI/2) * distance;
+                const y1 = centerY + Math.sin(angle + Math.PI/2) * distance;
+                const x2 = centerX + Math.cos(angle + Math.PI) * distance;
+                const y2 = centerY + Math.sin(angle + Math.PI) * distance;
+                const x3 = centerX + Math.cos(angle + Math.PI*3/2) * distance;
+                const y3 = centerY + Math.sin(angle + Math.PI*3/2) * distance;
+                
+                // Random scaling during orbit
+                const scale1 = 0.8 + Math.random() * 0.4;
+                const scale2 = 0.8 + Math.random() * 0.4;
+                
+                // Random animation timing - slower for larger orbits
+                const duration = 10 + (distance / 20) * (Math.random() * 5 + 5);
+                const delay = Math.random() * 5;
+                
+                object.style.width = `${size}px`;
+                object.style.height = `${size}px`;
+                object.style.setProperty('--startX', `${startX}px`);
+                object.style.setProperty('--startY', `${startY}px`);
+                object.style.setProperty('--x1', `${x1}px`);
+                object.style.setProperty('--y1', `${y1}px`);
+                object.style.setProperty('--x2', `${x2}px`);
+                object.style.setProperty('--y2', `${y2}px`);
+                object.style.setProperty('--x3', `${x3}px`);
+                object.style.setProperty('--y3', `${y3}px`);
+                object.style.setProperty('--scale1', scale1);
+                object.style.setProperty('--scale2', scale2);
+                object.style.left = `${startX}px`;
+                object.style.top = `${startY}px`;
+                object.style.animationDuration = `${duration}s`;
+                object.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(object);
+            }
+            
+            // Add floating dust particles that spiral toward the center
+            for (let i = 0; i < 50; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'floating-dust';
+                
+                // Random angle and distance from center
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 100 + 20;
+                const startX = centerX + Math.cos(angle) * distance;
+                const startY = centerY + Math.sin(angle) * distance;
+                
+                // Move toward the center with slight offset
+                const tx = (Math.cos(angle + Math.PI) * distance * 0.7) - (Math.random() * 10);
+                const ty = (Math.sin(angle + Math.PI) * distance * 0.7) - (Math.random() * 10);
+                
+                dust.style.left = `${startX}px`;
+                dust.style.top = `${startY}px`;
+                dust.style.setProperty('--tx', `${tx}px`);
+                dust.style.setProperty('--ty', `${ty}px`);
+                dust.style.animationDuration = `${Math.random() * 5 + 3}s`;
+                dust.style.animationDelay = `${Math.random() * 3}s`;
+                
+                container.appendChild(dust);
+            }
+        }
+
+        // Create psychedelic rain drops
+        function createPsychedelicDrops() {
+            const container = document.getElementById('psychedelic-drops-container');
+            const colors = [
+                '#FF0000', '#FF7F00', '#FFFF00', '#00FF00', 
+                '#0000FF', '#4B0082', '#8B00FF', '#FF00FF'
+            ];
+            
+            // Create initial drops
+            for (let i = 0; i < 30; i++) {
+                createPsychedelicDrop(container, colors, Math.random() * 4);
+            }
+            
+            // Continue creating drops
+            setInterval(() => {
+                createPsychedelicDrop(container, colors, 0);
+            }, 200);
+            
+            // Create color ripples
+            const rippleContainer = document.querySelector('.color-ripples-container');
+            setInterval(() => {
+                createColorRipple(rippleContainer, colors);
+            }, 1000);
+        }
+
+        function createPsychedelicDrop(container, colors, delay) {
+            const drop = document.createElement('div');
+            drop.className = 'psychedelic-drop';
+            
+            // Random properties
+            const size = Math.random() * 15 + 5;
+            const left = Math.random() * 250;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const glowColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            drop.style.width = `${size}px`;
+            drop.style.height = `${size}px`;
+            drop.style.left = `${left}px`;
+            drop.style.top = '-20px';
+            drop.style.backgroundColor = color;
+            drop.style.boxShadow = `0 0 10px ${glowColor}`;
+            drop.style.animationDelay = `${delay}s`;
+            
+            container.appendChild(drop);
+            
+            // Remove the drop after animation completes
+            setTimeout(() => {
+                container.removeChild(drop);
+            }, (4 + delay) * 1000);
+        }
+
+        function createColorRipple(container, colors) {
+            const ripple = document.createElement('div');
+            ripple.className = 'color-ripple';
+            
+            // Random properties
+            const centerX = Math.random() * 200 + 25;
+            const centerY = Math.random() * 300 + 25;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            ripple.style.left = `${centerX}px`;
+            ripple.style.top = `${centerY}px`;
+            ripple.style.setProperty('--ripple-color', color);
+            ripple.style.borderWidth = `${Math.random() * 3 + 1}px`;
+            
+            container.appendChild(ripple);
+            
+            // Remove the ripple after animation completes
+            setTimeout(() => {
+                container.removeChild(ripple);
+            }, 4000);
+        }
+
+        // Create quantum particles
+        function createQuantumParticles() {
+            const container = document.getElementById('quantum-particles-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'quantum-particle';
+                    
+                    // Random size and positions
+                    const size = Math.random() * 10 + 5;
+                    const startX = Math.random() * 250;
+                    const startY = Math.random() * 350;
+                    const midX = Math.random() * 250;
+                    const midY = Math.random() * 350;
+                    const endX = Math.random() * 250;
+                    const endY = Math.random() * 350;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.setProperty('--startX', `${startX}px`);
+                    particle.style.setProperty('--startY', `${startY}px`);
+                    particle.style.setProperty('--midX', `${midX}px`);
+                    particle.style.setProperty('--midY', `${midY}px`);
+                    particle.style.setProperty('--endX', `${endX}px`);
+                    particle.style.setProperty('--endY', `${endY}px`);
+                    
+                    container.appendChild(particle);
+                    
+                    // Remove the particle after animation completes
+                    setTimeout(() => {
+                        container.removeChild(particle);
+                    }, 6000);
+                }, i * 300);
+            }
+            
+            // Continue creating particles
+            setInterval(() => {
+                createQuantumParticlesBatch(container, centerX, centerY);
+            }, 6000);
+        }
+
+        function createQuantumParticlesBatch(container, centerX, centerY) {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'quantum-particle';
+                    
+                    // Random size and positions
+                    const size = Math.random() * 10 + 5;
+                    const startX = Math.random() * 250;
+                    const startY = Math.random() * 350;
+                    const midX = Math.random() * 250;
+                    const midY = Math.random() * 350;
+                    const endX = Math.random() * 250;
+                    const endY = Math.random() * 350;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.setProperty('--startX', `${startX}px`);
+                    particle.style.setProperty('--startY', `${startY}px`);
+                    particle.style.setProperty('--midX', `${midX}px`);
+                    particle.style.setProperty('--midY', `${midY}px`);
+                    particle.style.setProperty('--endX', `${endX}px`);
+                    particle.style.setProperty('--endY', `${endY}px`);
+                    
+                    container.appendChild(particle);
+                    
+                    // Remove the particle after animation completes
+                    setTimeout(() => {
+                        container.removeChild(particle);
+                    }, 6000);
+                }, i * 300);
+            }
+        }
+
+        // Create fractal patterns
+        function createFractals() {
+            const container = document.getElementById('fractal-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            
+            // Create initial fractals
+            for (let i = 0; i < 5; i++) {
+                createFractalSet(container, centerX, centerY, i * 20);
+            }
+            
+            // Create fractal lightning
+            setInterval(() => {
+                createFractalLightning(container, centerX, centerY);
+            }, 1000);
+        }
+
+        function createFractalSet(container, centerX, centerY, baseSize) {
+            const colors = ['#e1bee7', '#ce93d8', '#ba68c8', '#ab47bc', '#9c27b0'];
+            
+            for (let i = 0; i < 3; i++) {
+                const size = baseSize + i * 15;
+                const fractal = document.createElement('div');
+                fractal.className = 'fractal';
+                
+                fractal.style.width = `${size}px`;
+                fractal.style.height = `${size}px`;
+                fractal.style.left = `${centerX - size/2}px`;
+                fractal.style.top = `${centerY - size/2}px`;
+                fractal.style.backgroundColor = colors[i % colors.length];
+                fractal.style.opacity = `${0.7 - i * 0.15}`;
+                fractal.style.animationDelay = `${i * 0.5}s`;
+                fractal.style.animationDuration = `${10 + i * 2}s`;
+                
+                container.appendChild(fractal);
+            }
+        }
+
+        function createFractalLightning(container) {
+            const lightning = document.createElement('div');
+            lightning.className = 'fractal-lightning';
+            
+            // Random angle and length
+            const angle = Math.random() * 360;
+            const length = Math.random() * 100 + 50;
+            
+            lightning.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+            lightning.style.setProperty('--lightning-height', `${length}px`);
+            
+            container.appendChild(lightning);
+            
+            // Remove the lightning after animation completes
+            setTimeout(() => {
+                container.removeChild(lightning);
+            }, 500);
+        }
+
+        // Create void particles and rings
+        function createVoidEffects() {
+            const particlesContainer = document.getElementById('void-particles-container');
+            const ringsContainer = document.getElementById('void-rings-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            
+            // Create initial particles
+            for (let i = 0; i < 50; i++) {
+                createVoidParticle(particlesContainer, centerX, centerY, i * 0.1);
+            }
+            
+            // Continue creating particles
+            setInterval(() => {
+                for (let i = 0; i < 5; i++) {
+                    createVoidParticle(particlesContainer, centerX, centerY, i * 0.1);
+                }
+            }, 500);
+            
+            // Create rings
+            setInterval(() => {
+                createVoidRing(ringsContainer);
+            }, 1000);
+        }
+
+        function createVoidParticle(container, centerX, centerY, delay) {
+            const particle = document.createElement('div');
+            particle.className = 'void-particle';
+            
+            // Random size and position
+            const size = Math.random() * 5 + 2;
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 120 + 30;
+            const startX = centerX + Math.cos(angle) * distance;
+            const startY = centerY + Math.sin(angle) * distance;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${centerX}px`;
+            particle.style.top = `${centerY}px`;
+            particle.style.setProperty('--startX', `${startX - centerX}px`);
+            particle.style.setProperty('--startY', `${startY - centerY}px`);
+            particle.style.animationDelay = `${delay}s`;
+            
+            container.appendChild(particle);
+            
+            // Remove the particle after animation completes
+            setTimeout(() => {
+                container.removeChild(particle);
+            }, 4000 + delay * 1000);
+        }
+
+        function createVoidRing(container) {
+            const ring = document.createElement('div');
+            ring.className = 'void-ring';
+            
+            // Random size
+            const size = Math.random() * 200 + 100;
+            
+            ring.style.setProperty('--ring-size', `${size}px`);
+            
+            container.appendChild(ring);
+            
+            // Remove the ring after animation completes
+            setTimeout(() => {
+                container.removeChild(ring);
+            }, 8000);
+        }
+
+        // Create hyperdimensional planes and objects
+        function createHyperdimensionalEffects() {
+            const planesContainer = document.getElementById('dimension-planes-container');
+            const objectsContainer = document.getElementById('dimension-objects-container');
+            const centerX = 125; // Half of card width
+            const centerY = 175; // Center of card
+            
+            // Create dimension planes
+            for (let i = 0; i < 5; i++) {
+                const plane = document.createElement('div');
+                plane.className = 'dimension-plane';
+                
+                // Random size and positions
+                const width = Math.random() * 100 + 100;
+                const height = Math.random() * 50 + 50;
+                const startX = Math.random() * 150 + 50;
+                const startY = Math.random() * 250 + 50;
+                const endX = Math.random() * 150 + 50;
+                const endY = Math.random() * 250 + 50;
+                const rotX1 = Math.random() * 90;
+                const rotY1 = Math.random() * 90;
+                const rotX2 = Math.random() * 90 + 90;
+                const rotY2 = Math.random() * 90 + 90;
+                
+                plane.style.width = `${width}px`;
+                plane.style.height = `${height}px`;
+                plane.style.left = `${startX}px`;
+                plane.style.top = `${startY}px`;
+                plane.style.setProperty('--startX', `${startX}px`);
+                plane.style.setProperty('--startY', `${startY}px`);
+                plane.style.setProperty('--endX', `${endX}px`);
+                plane.style.setProperty('--endY', `${endY}px`);
+                plane.style.setProperty('--rotX1', `${rotX1}deg`);
+                plane.style.setProperty('--rotY1', `${rotY1}deg`);
+                plane.style.setProperty('--rotX2', `${rotX2}deg`);
+                plane.style.setProperty('--rotY2', `${rotY2}deg`);
+                plane.style.animationDelay = `${i * 0.5}s`;
+                
+                planesContainer.appendChild(plane);
+            }
+            
+            // Create dimension objects
+            for (let i = 0; i < 8; i++) {
+                const object = document.createElement('div');
+                object.className = 'dimension-object';
+                
+                // Alternate between cube and tesseract
+                if (i % 2 === 0) {
+                    const cube = document.createElement('div');
+                    cube.className = 'cube';
+                    object.appendChild(cube);
+                } else {
+                    const tesseract = document.createElement('div');
+                    tesseract.className = 'tesseract';
+                    object.appendChild(tesseract);
+                }
+                
+                // Random positions
+                const startX = Math.random() * 200 + 25;
+                const startY = Math.random() * 300 + 25;
+                const midX1 = Math.random() * 200 + 25;
+                const midY1 = Math.random() * 300 + 25;
+                const midX2 = Math.random() * 200 + 25;
+                const midY2 = Math.random() * 300 + 25;
+                const midX3 = Math.random() * 200 + 25;
+                const midY3 = Math.random() * 300 + 25;
+                
+                object.style.left = `${startX}px`;
+                object.style.top = `${startY}px`;
+                object.style.setProperty('--startX', `${startX}px`);
+                object.style.setProperty('--startY', `${startY}px`);
+                object.style.setProperty('--midX1', `${midX1}px`);
+                object.style.setProperty('--midY1', `${midY1}px`);
+                object.style.setProperty('--midX2', `${midX2}px`);
+                object.style.setProperty('--midY2', `${midY2}px`);
+                object.style.setProperty('--midX3', `${midX3}px`);
+                object.style.setProperty('--midY3', `${midY3}px`);
+                object.style.animationDelay = `${i * 0.5}s`;
+                
+                objectsContainer.appendChild(object);
+            }
+        }
+
+        // Add this new function to create dimension trails
+        function createDimensionTrails(object, container) {
+            let lastX = parseInt(object.style.left);
+            let lastY = parseInt(object.style.top);
+            
+            // Create trails as the object moves
+            const trailInterval = setInterval(() => {
+                const rect = object.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                
+                const currentX = rect.left - containerRect.left + rect.width/2;
+                const currentY = rect.top - containerRect.top + rect.height/2;
+                
+                // Only create trail if position changed significantly
+                if (Math.abs(currentX - lastX) > 5 || Math.abs(currentY - lastY) > 5) {
+                    const trail = document.createElement('div');
+                    trail.className = 'dimension-trail';
+                    
+                    trail.style.left = `${currentX}px`;
+                    trail.style.top = `${currentY}px`;
+                    
+                    container.appendChild(trail);
+                    
+                    // Remove trail after animation completes
+                    setTimeout(() => {
+                        if (container.contains(trail)) {
+                            container.removeChild(trail);
+                        }
+                    }, 2000);
+                    
+                    lastX = currentX;
+                    lastY = currentY;
+                }
+            }, 100);
+            
+            // Clear interval after 10 seconds to prevent memory issues
+            setTimeout(() => {
+                clearInterval(trailInterval);
+            }, 10000);
+        }
+    </script>
+</body>
+</html> 
